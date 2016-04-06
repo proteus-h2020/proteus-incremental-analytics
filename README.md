@@ -1,1 +1,1 @@
-# proteus-backend - UNDER Development (see development branch)
+# proteus-backend
