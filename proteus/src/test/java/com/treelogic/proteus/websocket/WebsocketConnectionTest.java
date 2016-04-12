@@ -3,7 +3,7 @@ package com.treelogic.proteus.websocket;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class WebsocketConnection {
+public class WebsocketConnectionTest {
 	
 	
 	
