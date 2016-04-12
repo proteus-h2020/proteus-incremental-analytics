@@ -29,7 +29,7 @@ public class Main {
 			.addPoint(new StreamPoint<Date, Integer, String>(new Date(),1,2, "A"))
 			.addPoint(new StreamPoint<Date, Integer, String>(new Date(),3,4, "B"))
 			.addPoint(new StreamPoint<Date, Integer, String>(new Date(),5,6, "C"));
-				
+		
 		
 		System.out.println(barchart.toJson());
 		System.out.println(streamgraph.toJson());
