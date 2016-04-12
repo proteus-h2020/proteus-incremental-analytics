@@ -4,6 +4,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class WebsocketConnection {
+	
+	
+	
+	@Test
+	public void test(){
+		assertTrue(1 == 1);
+	}
 	/**
 	@Test
 	public void startAndStopServer() throws Exception{
