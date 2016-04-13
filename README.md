@@ -3,10 +3,10 @@
 
 
 # What is PROTEUS
-PROTEUS is an EU H2020 funded research project to evolve massive online machine learning strategies for predictive analytics and real-time interactive visualization methods – in terms of scalability, usability and effectiveness dealing with extremely large data sets and data streams – into ready to use solutions, and to integrate them into enhanced version of Apache Flink, the EU Big Data platform. PROTEUS project is being carried out by an international consortium of 6 partners including Treelogic (creators of Lambdoop), TU Berlin (creators of Apache Flink) and ArcelorMitall (worlds’s leading steel company)
+PROTEUS is an EU H2020 funded research project to evolve massive online machine learning strategies for predictive analytics and real-time interactive visualization methods – in terms of scalability, usability and effectiveness dealing with extremely large data sets and data streams – into ready to use solutions, and to integrate them into enhanced version of Apache Flink, the EU Big Data platform. PROTEUS project is being carried out by an international consortium of 6 partners including Treelogic (creators of Lambdoop), DFKI (part of the team creator of Apache Flink), ArcelorMitall (worlds’s leading steel company), Lambdoop/Novelti (startup focused on streaming analytics) and Trilateral (policy and regulatory advice on new technologies)
 
 Official website: [PROTEUS H2020](http://www.proteus-bigdata.com/)
 
 ## What does this module do
-**proteus-backend** is a backend module whose mission is to provide an abstraction layer for Apache Flink streaming processing engine. It also helps you to real-time visualize all the streaming processing carried out by Apache Flink (by using a web browser).
+**proteus-backend** is a backend module that implements incremental version (~O(1) computational cost using approximations) of most common analytics operations.  Proteus-backend is implemented on top of the Apache Flink streaming engine and it also helps you to  visualize in real-time the results using the web-based library [PROTEUS-Charts](https://github.com/proteus-h2020/proteus-charts).
 
