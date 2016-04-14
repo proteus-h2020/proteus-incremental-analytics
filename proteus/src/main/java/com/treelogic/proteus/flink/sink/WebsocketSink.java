@@ -10,6 +10,7 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import com.treelogic.proteus.network.WebsocketServer;
 
 public class WebsocketSink<IN> extends RichSinkFunction<IN> {
+	
 	/**
 	 * Common logger
 	 */
@@ -43,9 +44,7 @@ public class WebsocketSink<IN> extends RichSinkFunction<IN> {
 	 * Invoke the current sink. Its mission is to send the previously calculated
 	 * value to websocket clients.
 	 * 
-	 * @param value
-	 *            Result from previous operations. It will be send to all the
-	 *            websocket clients.
+	 * @param value Result from previous operations. It will be send to all the websocket clients.
 	 */
 	@Override
 	public void invoke(final IN value) throws Exception {
@@ -61,6 +60,5 @@ public class WebsocketSink<IN> extends RichSinkFunction<IN> {
 	 */
 	@Override
 	public void close() throws Exception {
-		System.out.println("closing SINK");
 	}
 }
