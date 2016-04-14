@@ -50,8 +50,7 @@ public abstract class Chart<T> implements Jsonizable {
 	 */
 	public String toJson() {
 		ObjectWriter ow = new ObjectMapper()
-				.setSerializationInclusion(Include.NON_NULL).writer()
-				.withDefaultPrettyPrinter();
+				.setSerializationInclusion(Include.NON_NULL).writer();
 		try {
 			return ow.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
