@@ -1,10 +1,15 @@
 package com.treelogic.proteus.websocket;
 
 import static org.junit.Assert.*;
+
 import java.io.IOException;
+
 import javax.websocket.DeploymentException;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import com.treelogic.proteus.network.WebsocketServer;
 
 public class WebsocketMessagesTest {
@@ -32,6 +37,11 @@ public class WebsocketMessagesTest {
 		Thread.sleep(200);
 		actualClients = WebsocketServer.getSessions().size();
 		assertSame(actualClients, 0);
+	}
+	
+	@AfterClass
+	public static void stopServer(){
+		WebsocketServer.stop();
 	}
 
 }
