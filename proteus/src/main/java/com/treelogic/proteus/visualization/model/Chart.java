@@ -72,4 +72,42 @@ public abstract class Chart<T> implements Jsonizable {
 	public List<T> getPoints() {
 		return points;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((logger == null) ? 0 : logger.hashCode());
+		result = prime * result + ((points == null) ? 0 : points.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Chart<?> other = (Chart<?>) obj;
+		if (logger == null) {
+			if (other.logger != null)
+				return false;
+		} else if (!logger.equals(other.logger))
+			return false;
+		if (points == null) {
+			if (other.points != null)
+				return false;
+		} else if (!points.equals(other.points))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+	
 }

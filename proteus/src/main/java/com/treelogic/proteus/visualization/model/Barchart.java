@@ -47,5 +47,12 @@ public class Barchart<T, K> extends Chart<BasicPoint<T, K>> implements
 		this.points.addAll(points);
 		return this;
 	}
-
+	
+	/**
+	 * Print object information
+	 */
+	@Override
+	public String toString() {
+		return "Barchart [points=" + points + "]";
+	}
 }

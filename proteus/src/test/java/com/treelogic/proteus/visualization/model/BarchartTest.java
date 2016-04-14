@@ -1,28 +1,25 @@
 package com.treelogic.proteus.visualization.model;
 
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.treelogic.proteus.visualization.model.points.BasicPoint;
 
 public class BarchartTest {
+	static ObjectMapper mapper = new ObjectMapper();
 
 	@Test
-	public void newBarchart() {
-		Chart<BasicPoint<Integer, String>> barchart = new Barchart<Integer, String>();
-		String actual = barchart.toJson();
-		String expected = "{\"type\": \"Barchart\" \"series\": []}";
-		// assertEquals(result, expected);
-	}
-
-	@Test
-	public void addSomePoints() {
-		Barchart<String, Integer> barchart = new Barchart<String, Integer>();
-		barchart.addPoint(new BasicPoint<String, Integer>("España", 2))
-				.addPoint(new BasicPoint<String, Integer>("Hungría", 5))
-				.addPoint(new BasicPoint<String, Integer>("Alemania", 1));
-
-		String actual = barchart.toJson();
-		String expected = "";
-		// assertEquals(expected, actual);
+	public void newBarchart() throws JsonParseException, JsonMappingException, IOException {
+		Chart<BasicPoint<Integer, String>> expected = new Barchart<Integer, String>();
+		String jsonString = expected.toJson();
+		@SuppressWarnings("unchecked")
+		Barchart<Integer, String> actual = mapper.readValue(jsonString, Barchart.class);		
+		assertEquals(actual, expected);
 	}
 }
