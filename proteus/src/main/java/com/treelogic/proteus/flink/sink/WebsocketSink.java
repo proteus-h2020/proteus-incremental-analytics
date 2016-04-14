@@ -25,7 +25,7 @@ public class WebsocketSink<IN> extends RichSinkFunction<IN> {
 	 * When JVM loads this class, static block is executed implicitily
 	 */
 	static {
-		logger.debug("Initializing websocket server");
+		logger.info("Initializing websocket server");
 		WebsocketServer.start();
 	}
 
@@ -48,11 +48,7 @@ public class WebsocketSink<IN> extends RichSinkFunction<IN> {
 	 */
 	@Override
 	public void invoke(final IN value) throws Exception {
-		Executors.newFixedThreadPool(2).submit(new Runnable() {
-			public void run() {
-				logger.debug("Sending sink value: " + value);
-			}
-		});
+		logger.info("Sending value: " + value);
 	}
 
 	/**

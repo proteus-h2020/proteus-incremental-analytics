@@ -7,6 +7,7 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import com.treelogic.proteus.flink.sink.WebsocketSink;
+import com.treelogic.proteus.network.WebsocketServer;
 
 public class Program {
 
@@ -31,5 +32,6 @@ public class Program {
 
       // execute program
       env.execute("IncrementalAVG");
+      WebsocketServer.stop();
 	}
 }
