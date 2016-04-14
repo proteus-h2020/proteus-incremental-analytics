@@ -11,34 +11,24 @@ import com.treelogic.proteus.visualization.model.points.BasicPoint;
 import com.treelogic.proteus.visualization.model.points.StreamPoint;
 
 public class Main {
-	public static void main(String[] args) {
+	public static void main (String [] args){
+				//
 		//
-		//
-		// BARCHART
+		// BARCHART 
 		//
 		//
 		Barchart<String, Integer> barchart = new Barchart<String, Integer>();
-		barchart.addPoint(new BasicPoint<String, Integer>("España", 2))
-				.addPoint(new BasicPoint<String, Integer>("Hungría", 5))
-				.addPoint(new BasicPoint<String, Integer>("Alemania", 1));
+		barchart
+			.addPoint(new BasicPoint<String, Integer>("España", 2))
+			.addPoint(new BasicPoint<String, Integer>("Hungría", 5))
+			.addPoint(new BasicPoint<String, Integer>("Alemania", 1));
 		//
 		//
-		// STREAMGRAPH
+		// STREAMGRAPH 
 		//
 		//
 		Streamgraph<Date, Integer, String> streamgraph = new Streamgraph<Date, Integer, String>();
 		streamgraph
-<<<<<<< HEAD
-				.addPoint(
-						new StreamPoint<Date, Integer, String>(new Date(), 1,
-								2, "A"))
-				.addPoint(
-						new StreamPoint<Date, Integer, String>(new Date(), 3,
-								4, "B"))
-				.addPoint(
-						new StreamPoint<Date, Integer, String>(new Date(), 5,
-								6, "C"));
-=======
 			.addPoint(new StreamPoint<Date, Integer, String>(new Date(),1,2, "A"))
 			.addPoint(new StreamPoint<Date, Integer, String>(new Date(),3,4, "B"))
 			.addPoint(new StreamPoint<Date, Integer, String>(new Date(),5,6, "C"));
@@ -62,7 +52,6 @@ public class Main {
 			.addPoint(new BasicPoint<Date, Integer>(d1, 1))
 			.addPoint(new BasicPoint<Date, Integer>(d2, 1))
 			.addPoint(new BasicPoint<Date, Integer>(d3, 1));
->>>>>>> 91d04d4db6cea21e861aa9f9ae36b0fd027e8d09
 
 		System.out.println(barchart.toJson());
 		System.out.println(streamgraph.toJson());
