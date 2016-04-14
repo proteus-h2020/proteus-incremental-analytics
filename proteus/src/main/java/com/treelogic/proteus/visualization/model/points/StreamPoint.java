@@ -1,72 +1,86 @@
 package com.treelogic.proteus.visualization.model.points;
 
-public class StreamPoint<X,Y,K> extends Point {
-	
+public class StreamPoint<X, Y, K> extends Point {
+
 	/**
 	 * 'X' chart coordinate. Its type could be a string or numeric
 	 */
 	private X x;
-	
+
 	/**
 	 * 'y0' chart coordinate. Its type could be a string or numeric
 	 */
 	private Y y0;
-	
+
 	/**
 	 * 'y1' chart coordinate. Its type could be a string or numeric
 	 */
 	private Y y1;
-	
+
 	/**
 	 * A string key for identifying an object
 	 */
 	private K key;
-	
+
 	/**
 	 * Default constructor
 	 */
-	public StreamPoint(){
-		
+	public StreamPoint() {
+
 	}
-	
+
 	/**
-	 * This constructor receives all the needed parameters for the chart creation
-	 * @param x 'X' coordinate
-	 * @param y0 'y0' coordinate
-	 * @param y1 'y1' coordinate
-	 * @param key String identifier
+	 * This constructor receives all the needed parameters for the chart
+	 * creation
+	 * 
+	 * @param x
+	 *            'X' coordinate
+	 * @param y0
+	 *            'y0' coordinate
+	 * @param y1
+	 *            'y1' coordinate
+	 * @param key
+	 *            String identifier
 	 */
-	public StreamPoint(X x, Y y0, Y y1, K key){
+	public StreamPoint(X x, Y y0, Y y1, K key) {
 		this.x = x;
 		this.y0 = y0;
 		this.y1 = y1;
 		this.key = key;
 	}
-	
+
 	public X getX() {
 		return x;
 	}
+
 	public void setX(X x) {
 		this.x = x;
 	}
+
 	public Y getY0() {
 		return y0;
 	}
+
 	public void setY0(Y y0) {
 		this.y0 = y0;
 	}
+
 	public Y getY1() {
 		return y1;
 	}
+
 	public void setY1(Y y1) {
 		this.y1 = y1;
 	}
+
 	public K getKey() {
 		return key;
 	}
+
 	public void setKey(K key) {
 		this.key = key;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -77,7 +91,7 @@ public class StreamPoint<X,Y,K> extends Point {
 		result = prime * result + ((y1 == null) ? 0 : y1.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -87,7 +101,7 @@ public class StreamPoint<X,Y,K> extends Point {
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		StreamPoint<X,Y,K> other = (StreamPoint<X,Y,K>) obj;
+		StreamPoint<X, Y, K> other = (StreamPoint<X, Y, K>) obj;
 		if (key == null) {
 			if (other.key != null)
 				return false;
@@ -110,9 +124,10 @@ public class StreamPoint<X,Y,K> extends Point {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "StreamPoint [x=" + x + ", y0=" + y0 + ", y1=" + y1 + ", key=" + key + "]";
+		return "StreamPoint [x=" + x + ", y0=" + y0 + ", y1=" + y1 + ", key="
+				+ key + "]";
 	}
 }

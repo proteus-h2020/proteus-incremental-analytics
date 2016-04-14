@@ -1,7 +1,7 @@
 package com.treelogic.proteus.visualization.model.points;
 
 public abstract class Point {
-	
+
 	/**
 	 * This object contains information about a given point
 	 */
@@ -14,7 +14,5 @@ public abstract class Point {
 	public void setDetails(PointDetails details) {
 		this.details = details;
 	}
-	
-	
 
 }

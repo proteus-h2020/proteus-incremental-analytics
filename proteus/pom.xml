@@ -7,8 +7,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty-version>9.2.7.v20150116</jetty-version>
+		<org.apache.flink>1.0.1</org.apache.flink>
 	</properties>
-	
+
 	<dependencies>
 		<!-- JUnit, for testing purposes -->
 		<dependency>
@@ -47,6 +48,18 @@
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>javax-websocket-client-impl</artifactId>
 			<version>${jetty-version}</version>
+		</dependency>
+		<!-- Flink dependencies -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-java</artifactId>
+			<version>${org.apache.flink}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-streaming-java_2.11</artifactId>
+			<version>${org.apache.flink}</version>
 		</dependency>
 
 

@@ -1,29 +1,32 @@
 package com.treelogic.proteus.visualization.model.points;
 
-public class BasicPoint<T,K> extends Point {
+public class BasicPoint<T, K> extends Point {
 	/**
 	 * 'X' chart coordinate. Its type could be a string or numeric
 	 */
 	private T x;
-	
+
 	/**
 	 * 'Y' chart coordinate. its type could be a string or numeric
 	 */
 	private K y;
-	
+
 	/**
 	 * Default constructor
 	 */
-	public BasicPoint(){
-		
+	public BasicPoint() {
+
 	}
-	
+
 	/**
 	 * Constructor that receives two parameters: 'x' and 'y' coordinates
-	 * @param key 'x' coordinate
-	 * @param value 'y' coordinate
+	 * 
+	 * @param key
+	 *            'x' coordinate
+	 * @param value
+	 *            'y' coordinate
 	 */
-	public BasicPoint(T x, K y){
+	public BasicPoint(T x, K y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -62,7 +65,7 @@ public class BasicPoint<T,K> extends Point {
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		BasicPoint<T,K> other = (BasicPoint<T, K>) obj;
+		BasicPoint<T, K> other = (BasicPoint<T, K>) obj;
 		if (x == null) {
 			if (other.x != null)
 				return false;
@@ -80,5 +83,5 @@ public class BasicPoint<T,K> extends Point {
 	public String toString() {
 		return "Pair [key=" + x + ", value=" + y + "]";
 	}
-	
+
 }

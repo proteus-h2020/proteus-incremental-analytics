@@ -17,7 +17,7 @@ public abstract class Chart<T> implements Jsonizable {
 	 * Common logger
 	 */
 	private Log logger = LogFactory.getLog(this.getClass());
-	
+
 	/**
 	 * Chart type. It depends on class name.
 	 */
@@ -27,30 +27,30 @@ public abstract class Chart<T> implements Jsonizable {
 	 * List of points
 	 */
 	protected List<T> points;
-	
+
 	/**
 	 * Default constructor
 	 */
-	public Chart(){
+	public Chart() {
 		this.points = new ArrayList<T>();
 	}
-	
+
 	/**
 	 * This constructor Create a new chart with the specified points
-	 * @param points List of points to be added to the chart
+	 * 
+	 * @param points
+	 *            List of points to be added to the chart
 	 */
-	public Chart(List<T> points){
+	public Chart(List<T> points) {
 		this.points = points;
 	}
-	
-	
+
 	/**
 	 * This method converts the scoped current into a JSON string.
 	 */
 	public String toJson() {
 		ObjectWriter ow = new ObjectMapper()
-				.setSerializationInclusion(Include.NON_NULL)
-				.writer()
+				.setSerializationInclusion(Include.NON_NULL).writer()
 				.withDefaultPrettyPrinter();
 		try {
 			return ow.writeValueAsString(this);
@@ -59,12 +59,13 @@ public abstract class Chart<T> implements Jsonizable {
 			return "{}";
 		}
 	}
-	
+
 	/**
 	 * Returns chart type
+	 * 
 	 * @return chart type
 	 */
-	
+
 	public String getType() {
 		return type;
 	}
