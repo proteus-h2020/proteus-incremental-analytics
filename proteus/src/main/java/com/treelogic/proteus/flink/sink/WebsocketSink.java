@@ -1,12 +1,9 @@
 package com.treelogic.proteus.flink.sink;
 
-import java.util.concurrent.Executors;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-
 import com.treelogic.proteus.network.WebsocketServer;
 
 public class WebsocketSink<IN> extends RichSinkFunction<IN> {
@@ -49,6 +46,7 @@ public class WebsocketSink<IN> extends RichSinkFunction<IN> {
 	@Override
 	public void invoke(final IN value) throws Exception {
 		logger.info("Sending value: " + value);
+		WebsocketServer.sendAll(value.toString());
 	}
 
 	/**
