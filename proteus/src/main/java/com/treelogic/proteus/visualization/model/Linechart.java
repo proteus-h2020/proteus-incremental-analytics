@@ -42,4 +42,12 @@ public class Linechart<T,K> extends Chart<BasicPoint<T,K>> implements ChartActio
 		return this;
 	}
 	
+	/**
+	 * Print object information
+	 */
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	
 }

@@ -109,5 +109,11 @@ public abstract class Chart<T> implements Jsonizable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return this.toJson();
+	}
+	
 	
 }

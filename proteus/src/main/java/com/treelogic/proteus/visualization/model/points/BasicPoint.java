@@ -31,20 +31,12 @@ public class BasicPoint<T, K> extends Point {
 		this.y = y;
 	}
 
-	public T getKey() {
+	public T getX() {
 		return x;
 	}
 
-	public void setKey(T key) {
-		this.x = key;
-	}
-
-	public K getValue() {
+	public K getY() {
 		return y;
-	}
-
-	public void setValue(K value) {
-		this.y = value;
 	}
 
 	@Override

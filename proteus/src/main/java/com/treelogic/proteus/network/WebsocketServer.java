@@ -43,6 +43,9 @@ public class WebsocketServer {
 	 * Initialize a websocket server
 	 */
 	public static void start() {
+		if(isRunning()){
+			return;
+		}
 		server = new Server();
 		connector = new ServerConnector(server);
 		connector.setPort(8787);
@@ -112,12 +115,7 @@ public class WebsocketServer {
 	 * @param client client session
 	 */
 	public static void send(String message, Session client){
-		try {
-			client.getBasicRemote().sendText(message);
-		} catch (IOException e) {
-			logger.error(e);
-			e.printStackTrace();
-		}
+		client.getAsyncRemote().sendText(message);
 	}
 	
 	/**

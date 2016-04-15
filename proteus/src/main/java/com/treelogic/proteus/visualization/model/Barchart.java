@@ -53,6 +53,6 @@ public class Barchart<T, K> extends Chart<BasicPoint<T, K>> implements
 	 */
 	@Override
 	public String toString() {
-		return "Barchart [points=" + points + "]";
+		return super.toString();
 	}
 }
