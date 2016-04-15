@@ -5,14 +5,11 @@ import java.util.List;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
-import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
-import org.apache.flink.util.Collector;
 
+import com.treelogic.proteus.flink.examples.utils.WebBrowser;
 import com.treelogic.proteus.flink.sink.WebsocketSink;
 import com.treelogic.proteus.network.WebsocketServer;
 import com.treelogic.proteus.visualization.model.Barchart;
-import com.treelogic.proteus.visualization.model.Chart;
 import com.treelogic.proteus.visualization.model.points.BasicPoint;
 
 
@@ -21,8 +18,8 @@ public class Program {
 	public static void main(String[] args) throws Exception {
 		String htmlTemplate = "file://" + Program.class.getResource("barchart.html").getPath();
 		WebsocketServer.start();
-		System.out.println(htmlTemplate);
-		Thread.sleep(8000);
+		//wait for websocket initialization
+		WebBrowser.start(htmlTemplate);
 		
 		List<BasicPoint<Integer, Integer>> data = new ArrayList<BasicPoint<Integer, Integer>>();
 		for(int i = 0 ; i < 50; i++){
