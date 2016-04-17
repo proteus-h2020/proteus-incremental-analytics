@@ -10,3 +10,6 @@ Official website: [PROTEUS H2020](http://www.proteus-bigdata.com/)
 ## What does this module do
 **proteus-backend** is a backend module that implements incremental version (~O(1) computational cost using approximations) of most common analytics operations.  Proteus-backend is implemented on top of the Apache Flink streaming engine and it also helps you to  visualize in real-time the results using the web-based library [PROTEUS-Charts](https://github.com/proteus-h2020/proteus-charts).
 
+## Documentation
+Check our [Javadoc site](http://proteus-h2020.github.io/proteus-backend/) if you are looking for code documentation, or have a look into [Official PROTEUS Website] (http://www.proteus-bigdata.com/ ) for project documentation.
+
