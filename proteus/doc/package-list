@@ -1,0 +1,10 @@
+com.treelogic.proteus.flink.examples.football
+com.treelogic.proteus.flink.examples.simplechart
+com.treelogic.proteus.flink.examples.utils
+com.treelogic.proteus.flink.sink
+com.treelogic.proteus.network
+com.treelogic.proteus.visualization
+com.treelogic.proteus.visualization.model
+com.treelogic.proteus.visualization.model.interfaces
+com.treelogic.proteus.visualization.model.points
+com.treelogic.proteus.websocket

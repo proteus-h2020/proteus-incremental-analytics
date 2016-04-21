@@ -10,15 +10,15 @@ public class WebBrowser {
 
 	private static Log logger = LogFactory.getLog(WebBrowser.class);
 
-	public  static void start(String web){
+	public  static void start(String web) throws IOException{
 		String browser = requireBrowserInput();
 		String path = ResourcePOJO.class.getResource("launch-browser").getPath();
 		ProcessBuilder b = new ProcessBuilder(path + "/run.sh", web, path, browser);
 		
 		try {
-			b.start();	
+			b.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

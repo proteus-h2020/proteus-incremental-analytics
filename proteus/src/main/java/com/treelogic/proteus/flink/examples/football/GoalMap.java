@@ -10,6 +10,7 @@ public class GoalMap implements MapFunction<String, Tuple1<Integer>> {
 	 */
 	private static final long serialVersionUID = 1296508221575214114L;
 
+	
 	/**
 	 * Goal map function
 	 */
