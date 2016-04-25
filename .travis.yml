@@ -3,4 +3,4 @@ jdk:
   - openjdk7
   - oraclejdk8
 script:
-  mvn test -f proteus/pom.xml
+  mvn test
