@@ -6,6 +6,8 @@ import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
+import com.treelogic.proteus.flink.incops.IncrementalAverage;
+
 public class Program {
 	
 	public static final int WINDOW_SIZE=100;
@@ -33,7 +35,11 @@ public class Program {
 				);
 				
 		DataStream<AirRegister> stream = streamingEnv.fromCollection(registers.collect());
-		stream.keyBy("station").countWindow(WINDOW_SIZE).apply(new StatefulWindow()).writeAsCsv("resultados"+ new Date().getTime()).setParallelism(1);
+		stream.keyBy("station")
+			.countWindow(WINDOW_SIZE)
+			.apply(new IncrementalAverage<AirRegister>("o3"))
+			.writeAsCsv("results_"+ new Date().getTime());
+			
 		streamingEnv.execute("AirRegisters");
 	}
 
