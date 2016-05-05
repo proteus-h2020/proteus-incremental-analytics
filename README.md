@@ -1,5 +1,5 @@
 # proteus-backend
-[![Build Status](https://travis-ci.org/proteus-h2020/proteus-backend.svg?branch=master)](https://travis-ci.org/proteus-h2020/proteus-backend)
+[![Build Status](https://travis-ci.org/proteus-h2020/proteus-backend.svg?branch=development)](https://travis-ci.org/proteus-h2020/proteus-backend)
 
 
 # What is PROTEUS
