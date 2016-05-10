@@ -60,6 +60,7 @@ public class IncrementalAverage<IN>
 			IN in = iterator.next();
 			Field field = in.getClass().getDeclaredField(this.field);
 			field.setAccessible(true);
+			
 			Double value = (Double) field.get(in);
 			sum += value;
 		}

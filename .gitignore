@@ -48,3 +48,9 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+
+# Intellij IDEA
+.idea/
+proteus.iml
+
+target/
