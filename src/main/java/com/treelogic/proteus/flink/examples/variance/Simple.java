@@ -1,12 +1,10 @@
-package com.treelogic.proteus.flink.examples.mode;
+package com.treelogic.proteus.flink.examples.variance;
 
 import com.treelogic.proteus.flink.examples.airquality.AirRegister;
-import com.treelogic.proteus.flink.incops.IncrementalMode;
+import com.treelogic.proteus.flink.incops.IncrementalVariance;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.io.PojoCsvInputFormat;
-import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.api.java.typeutils.PojoField;
 import org.apache.flink.api.java.typeutils.PojoTypeInfo;
 import org.apache.flink.core.fs.Path;
@@ -17,16 +15,16 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ModeExample {
+public class Simple {
 
-    public static final int WINDOW_SIZE = 3;
+    public static final int WINDOW_SIZE = 2;
 
     public static void main(String[] args) throws Exception {
-        // set up the execution environment
         final StreamExecutionEnvironment streamingEnv =
-          StreamExecutionEnvironment.getExecutionEnvironment();
+            StreamExecutionEnvironment.getExecutionEnvironment();
         //final String hdfs = "hdfs://192.168.4.245:8020/bigdata/datasets/aire.csv";
-        final String hdfs = "./src/main/resources/datasets/smallDataset.csv";
+        final String hdfs =
+            "./src/main/resources/datasets/smallDataset.csv";
 
         List<PojoField> fields = new LinkedList<>();
         List<String> fieldNames = new LinkedList<>();
@@ -38,23 +36,24 @@ public class ModeExample {
         }
 
         PojoTypeInfo<AirRegister> typeInfo =
-          new PojoTypeInfo<>(AirRegister.class, fields);
+            new PojoTypeInfo<>(AirRegister.class, fields);
 
         String[] fieldNamesArray = fieldNames.toArray(new String[0]);
 
         PojoCsvInputFormat<AirRegister> format =
-          new PojoCsvInputFormat<>(new Path(hdfs), typeInfo, fieldNamesArray);
+            new PojoCsvInputFormat<>(new Path(hdfs), typeInfo, fieldNamesArray);
 
         DataStream<AirRegister> stream =
-          streamingEnv.createInput(format, typeInfo);
+            streamingEnv.createInput(format, typeInfo);
 
-        stream.keyBy("station")
-          .countWindow(WINDOW_SIZE)
-          .apply(new IncrementalMode<AirRegister>("o3", 3, 1))
-          //.writeAsCsv("results");
-          .print();
+        stream
+            .keyBy("station")
+            .countWindow(WINDOW_SIZE)
+            .apply(new IncrementalVariance<AirRegister>("o3"))
+            .print();
 
         streamingEnv.execute("AirRegisters");
     }
 
 }
+
