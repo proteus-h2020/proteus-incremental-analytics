@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class IncrementalVariance<IN>
-    extends RichWindowFunction<IN, Tuple2<String, Double>, Tuple, GlobalWindow> {
+    extends RichWindowFunction<IN, Double, Tuple, GlobalWindow> {
 
     private static final long serialVersionUID = 1L;
     private final String field;
@@ -38,7 +38,7 @@ public class IncrementalVariance<IN>
     public void apply(Tuple key,
                       GlobalWindow window,
                       Iterable<IN> input,
-                      Collector<Tuple2<String, Double>> out) throws Exception {
+                      Collector<Double> out) throws Exception {
 
         ListState<List<Double>> state =
             getRuntimeContext().getListState(descriptor);
@@ -70,7 +70,7 @@ public class IncrementalVariance<IN>
 
         state.add(elems);
 
-        out.collect(new Tuple2<>(key.toString(), ess / n));
+        out.collect(ess / n);
     }
 
     private Double grantMean(List<List<Double>> elems, Double mean) {
