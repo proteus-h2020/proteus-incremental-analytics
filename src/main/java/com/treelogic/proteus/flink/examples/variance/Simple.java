@@ -17,14 +17,13 @@ import java.util.List;
 
 public class Simple {
 
-    public static final int WINDOW_SIZE = 2;
+    public static final int WINDOW_SIZE = 1000000;
 
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment streamingEnv =
             StreamExecutionEnvironment.getExecutionEnvironment();
-        //final String hdfs = "hdfs://192.168.4.245:8020/bigdata/datasets/aire.csv";
-        final String hdfs =
-            "./src/main/resources/datasets/smallDataset.csv";
+        final String hdfs = "hdfs://192.168.4.245:8020/bigdata/datasets/aire.csv";
+        //final String hdfs = "./src/main/resources/datasets/smallDataset.csv";
 
         List<PojoField> fields = new LinkedList<>();
         List<String> fieldNames = new LinkedList<>();
@@ -41,7 +40,7 @@ public class Simple {
         String[] fieldNamesArray = fieldNames.toArray(new String[0]);
 
         PojoCsvInputFormat<AirRegister> format =
-            new PojoCsvInputFormat<>(new Path(hdfs), typeInfo, fieldNamesArray);
+            new PojoCsvInputFormat<>(new Path(hdfs), typeInfo);
 
         DataStream<AirRegister> stream =
             streamingEnv.createInput(format, typeInfo);
