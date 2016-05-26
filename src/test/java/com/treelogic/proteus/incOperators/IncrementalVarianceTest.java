@@ -7,9 +7,7 @@ import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
 import org.flinkspector.datastream.DataStreamTestEnvironment;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Timeout;
 
 import java.util.ArrayList;
 import java.util.List;
