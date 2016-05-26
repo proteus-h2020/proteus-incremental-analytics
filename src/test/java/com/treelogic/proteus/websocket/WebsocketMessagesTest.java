@@ -19,7 +19,7 @@ public class WebsocketMessagesTest {
 		WebsocketServer.start();
 	}
 	
-	@Test
+	@Test(timeout = 0)
 	public void testSessions() throws DeploymentException, IOException, InterruptedException{
 		Thread.sleep(500);
 		assertTrue(WebsocketServer.isRunning());
