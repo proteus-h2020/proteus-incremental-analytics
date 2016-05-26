@@ -7,6 +7,19 @@ public class AirRegister {
 	private double latitude, longitude;
 	private String station;
 
+	public AirRegister() {}
+
+	/**
+	 * Constructor for testing purposes
+	 *
+	 * @param station
+	 * @param o3
+     */
+	public AirRegister(String station, double o3) {
+		this.station = station;
+		this.o3 = o3;
+	}
+
 	public String getDate() {
 		return date;
 	}
