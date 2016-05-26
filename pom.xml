@@ -10,7 +10,7 @@
         <jetty-version>9.2.7.v20150116</jetty-version>
         <org.apache.flink>1.0.1</org.apache.flink>
         <compileSource>1.7</compileSource>
-        <testCompileSource>1.7</testCompileSource>
+        <testCompileSource>1.8</testCompileSource>
     </properties>
 
     <dependencies>
