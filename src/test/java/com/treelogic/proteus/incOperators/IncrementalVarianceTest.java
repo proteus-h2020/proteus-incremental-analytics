@@ -47,14 +47,17 @@ public class IncrementalVarianceTest extends DataStreamTestBase {
 
     private List<AirRegister> createDataset() {
         String station = "station";
-        List<Double> o3_1 = asList(
+        List<Double> o3registers = asList(
                 34d, 8d, 41d, 11d, 9d, 87d, 23d, // First window values
                 15d, 1d, 22d, 31d, 90d, 0d, 2d); // Second window values
 
         List<AirRegister> dataset = new ArrayList<>(14);
 
-        for(Double d : o3_1) {
-            dataset.add(new AirRegister(station, d));
+        for(Double d : o3registers) {
+            AirRegister ar = new AirRegister();
+            ar.setStation(station);
+            ar.setO3(d);
+            dataset.add(ar);
         }
 
         return dataset;
