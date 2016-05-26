@@ -26,6 +26,9 @@ public class IncrementalVariance<IN>
     private static final long serialVersionUID = 1L;
     private final String field;
 
+    /**
+     * Tuple3 - SumSquaredErrors, SumElems, ProcessedWindowsCount>
+     */
     private ValueStateDescriptor<Tuple3<Double, Double, Integer>> descriptor;
 
     public IncrementalVariance(String field) {
