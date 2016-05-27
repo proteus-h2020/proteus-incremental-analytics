@@ -109,6 +109,7 @@
     </build>
 
     <repositories>
+        <!-- Flink spector repository -->
         <repository>
             <id>otto-bintray</id>
             <url>https://dl.bintray.com/ottogroup/maven</url>
