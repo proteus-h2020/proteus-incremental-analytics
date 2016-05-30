@@ -19,15 +19,17 @@ import java.util.*;
  * key of the map represents variable's value and the value represents the
  * repetitions of that value.
  *
+ * Collects the mode element and it's value
+ *
  * @param <IN> POJO that contains fields to be analyzed
  */
 public class IncrementalMode<IN> extends
-  RichWindowFunction<IN, List<Tuple2<Double, Integer>>, Tuple, GlobalWindow> {
+    RichWindowFunction<IN, List<Tuple2<Double, Integer>>, Tuple, GlobalWindow> {
 
     private static final long serialVersionUID = 1;
 
     private ValueStateDescriptor<Map<Double, Integer>>
-      stateDescriptor;
+        stateDescriptor;
 
     private String field = "";
     private int numValues, numDecimals;
@@ -36,6 +38,12 @@ public class IncrementalMode<IN> extends
         this(field, 1, 0);
     }
 
+    /**
+     * Main constructor
+     * @param field Name of the field to compute the mode
+     * @param numValues To return the numValues top modes
+     * @param numDecimals Round decimals to numDecimals
+     */
     public IncrementalMode(String field, int numValues, int numDecimals) {
         if (field == null || field.equals("")) {
             throw new IllegalArgumentException("Field cannot be empty");
@@ -46,17 +54,18 @@ public class IncrementalMode<IN> extends
         this.numDecimals = numDecimals >= 0 ? numDecimals : 0;
 
         stateDescriptor = new ValueStateDescriptor<Map<Double, Integer>>(
-          "mode-last-result",
-          //new TypeHint<Map<Double, Integer>>() {}.getTypeInfo(),
-          TypeInformation.of(new TypeHint<Map<Double, Integer>>() {
-          }),
-          new HashMap<Double, Integer>());
+            "mode-last-result",
+            TypeInformation.of(new TypeHint<Map<Double, Integer>>() {}),
+            new HashMap<Double, Integer>());
     }
 
-    public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
+    public void apply(Tuple key,
+                      GlobalWindow window,
+                      Iterable<IN> input,
                       Collector<List<Tuple2<Double, Integer>>> out) throws Exception {
+
         ValueState<Map<Double, Integer>> state =
-          getRuntimeContext().getState(stateDescriptor);
+            getRuntimeContext().getState(stateDescriptor);
 
         List<Tuple2<Double, Integer>> list = new ArrayList<>(numValues);
         Map<Double, Integer> lastRecord = state.value();
@@ -96,11 +105,11 @@ public class IncrementalMode<IN> extends
     private TreeSet<Tuple2<Double, Integer>> toTreeSet(Map<Double, Integer> lastRecord) {
         // Order elements by number of appearances
         Comparator<Tuple2<Double, Integer>> c =
-          new Comparator<Tuple2<Double, Integer>>() {
-              public int compare(Tuple2<Double, Integer> o1, Tuple2<Double, Integer> o2) {
-                  return o1.f1 < o2.f1 ? 1 : -1;
-              }
-          };
+            new Comparator<Tuple2<Double, Integer>>() {
+                public int compare(Tuple2<Double, Integer> o1, Tuple2<Double, Integer> o2) {
+                    return o1.f1 < o2.f1 ? 1 : -1;
+                }
+            };
 
         TreeSet<Tuple2<Double, Integer>> set = new TreeSet<>(c);
 

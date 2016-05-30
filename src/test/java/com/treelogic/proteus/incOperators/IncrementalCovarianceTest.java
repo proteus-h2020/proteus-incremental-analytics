@@ -2,7 +2,6 @@ package com.treelogic.proteus.incOperators;
 
 import com.treelogic.proteus.flink.examples.airquality.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalCovariance;
-import com.treelogic.proteus.flink.incops.IncrementalVariance;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
@@ -17,12 +16,10 @@ import static java.util.Arrays.asList;
 
 public class IncrementalCovarianceTest extends DataStreamTestBase {
 
-    private static DataStreamTestEnvironment env = null;
-
     @BeforeClass
     public static void beforeClass() {
         try {
-            env = DataStreamTestEnvironment.createTestEnvironment(1);
+            DataStreamTestEnvironment env = DataStreamTestEnvironment.createTestEnvironment(1);
             env.setTimeoutInterval(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -31,22 +28,22 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
 
     @Test
     public void naiveCovarianceTest() {
-        DataStream<Double> stream = this
-            .createTestStream(createDataset(7))
+        DataStream<Double> stream =
+            createTestStream(createDataset(7))
             .keyBy("station")
             .countWindow(7)
             .apply(new IncrementalCovariance<AirRegister>("o3", "co"));
 
         ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expectAll(asList(-340.3333333333333d));
+            new ExpectedRecords<Double>().expect(-340.3333333333333d);
 
         assertStream(stream, expected);
     }
 
     @Test
     public void combinedCovarianceTest() {
-        DataStream<Double> stream = this
-            .createTestStream(createDataset(14))
+        DataStream<Double> stream =
+            createTestStream(createDataset(14))
             .keyBy("station")
             .countWindow(7)
             .apply(new IncrementalCovariance<AirRegister>("o3", "co"));
