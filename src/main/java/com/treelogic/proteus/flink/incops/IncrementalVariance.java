@@ -6,7 +6,6 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple3;
-import org.apache.flink.streaming.api.functions.windowing.RichWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
@@ -21,7 +20,7 @@ import java.util.List;
  * @param <IN> Pojo type that contains the field to be analysed
  */
 public class IncrementalVariance<IN>
-    extends RichWindowFunction<IN, Double, Tuple, GlobalWindow> {
+    extends IncrementalOperation<IN, Double> {
 
     private static final long serialVersionUID = 1L;
     private final String field;
@@ -36,10 +35,10 @@ public class IncrementalVariance<IN>
 
         this.field = field;
 
-        descriptor = new ValueStateDescriptor<Tuple3<Double, Double, Integer>>(
+        descriptor = new ValueStateDescriptor<>(
             "incremental-variance-descriptor",
             TypeInformation.of(new TypeHint<Tuple3<Double, Double, Integer>>() {}),
-            new Tuple3<Double, Double, Integer>(0d, 0d, 0));
+            new Tuple3<>(0d, 0d, 0));
     }
 
     public void apply(Tuple key,
@@ -77,7 +76,7 @@ public class IncrementalVariance<IN>
         int size = elems.size();
 
         if (j == 1) {
-            state.update(new Tuple3<Double, Double, Integer>(cS, cT, j));
+            state.update(new Tuple3<>(cS, cT, j));
             out.collect(cS / (size - 1));
         } else {
             double pow, f, St;
@@ -86,7 +85,7 @@ public class IncrementalVariance<IN>
             pow = Math.pow(((n / m) * T) - cT, 2);
             f = m / (n * (m + n));
             St = S + cS + (f * pow);
-            state.update(new Tuple3<Double, Double, Integer>(St, T + cT, j));
+            state.update(new Tuple3<>(St, T + cT, j));
             out.collect(St / (m + n - 1));
         }
     }

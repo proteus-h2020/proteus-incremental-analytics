@@ -7,7 +7,6 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple4;
-import org.apache.flink.streaming.api.functions.windowing.RichWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IncrementalCovariance<IN>
-    extends RichWindowFunction<IN, Double, Tuple, GlobalWindow> {
+    extends IncrementalOperation<IN, Double> {
 
     private final static Long serialVersionUID = 1L;
     private final String fieldX, fieldY;
@@ -129,38 +128,38 @@ public class IncrementalCovariance<IN>
     private static class MeanTuple {
         private double num , denom;
 
-        public MeanTuple() { }
+        MeanTuple() { }
 
-        public MeanTuple(double num, double denom) {
+        MeanTuple(double num, double denom) {
             this.num = num;
             this.denom = denom;
         }
 
-        public double getNum() {
+        double getNum() {
             return num;
         }
 
-        public void setNum(double num) {
+        void setNum(double num) {
             this.num = num;
         }
 
-        public double getDenom() {
+        double getDenom() {
             return denom;
         }
 
-        public void setDenom(double denom) {
+        void setDenom(double denom) {
             this.denom = denom;
         }
 
-        public double mean() {
+        double mean() {
             return num / denom;
         }
 
-        public void incNum(double value) {
+        void incNum(double value) {
             setNum(getNum() + value);
         }
 
-        public void incDenom(double value) {
+        void incDenom(double value) {
             setDenom(getDenom() + value);
         }
     }
