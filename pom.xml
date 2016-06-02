@@ -92,6 +92,7 @@
             </resource>
         </resources>
         <plugins>
+            <!-- Compile source code using java 7 and tests using java 8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -117,9 +118,18 @@
 
             <!-- Generate javadocs and upload to Github -->
             <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>site</phase>
@@ -134,7 +144,7 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.12</version>
                 <configuration>
-                    <message>Creating javadocs for ${project.version}</message>
+                    <message>Updated javadocs for ${project.version}</message>
                     <outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory>
                 </configuration>
                 <executions>
