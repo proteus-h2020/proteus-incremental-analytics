@@ -22,7 +22,7 @@ public class IncrementalCovariance<IN>
     private final String fieldX, fieldY;
 
     /**
-     * Tuple4<xMean, yMean, Sum of deviation products, Element count>
+     * Tuple4 - xMean, yMean, Sum of deviation products, Element count
      */
     private ValueStateDescriptor<Tuple4<MeanTuple, MeanTuple, Double, Double>> descriptor;
 

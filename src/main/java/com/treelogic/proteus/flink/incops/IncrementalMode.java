@@ -34,6 +34,10 @@ public class IncrementalMode<IN> extends
     private String field = "";
     private int numValues, numDecimals;
 
+    /**
+     * numValues = 1 and numDecimals = 0
+     * @param field
+     */
     public IncrementalMode(String field) {
         this(field, 1, 0);
     }

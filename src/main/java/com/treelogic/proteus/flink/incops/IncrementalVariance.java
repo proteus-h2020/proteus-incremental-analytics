@@ -27,7 +27,7 @@ public class IncrementalVariance<IN>
     private final String field;
 
     /**
-     * Tuple3 - SumSquaredErrors, SumElems, ProcessedWindowsCount>
+     * Tuple3 - SumSquaredErrors, SumElems, ProcessedWindowsCount
      */
     private ValueStateDescriptor<Tuple3<Double, Double, Integer>> descriptor;
 
