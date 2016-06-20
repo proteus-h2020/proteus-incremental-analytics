@@ -17,7 +17,7 @@ import org.apache.flink.util.Collector;
 import com.treelogic.proteus.flink.incops.util.MeanTuple;
 
 public class IncrementalCovariance<IN>
-    extends IncrementalOperation<IN, Double> {
+    extends IncrementalOperation<IN, Tuple2<String, Double>> {
 
 	private static final long serialVersionUID = 1L;
     private final String fieldX, fieldY;
@@ -42,10 +42,10 @@ public class IncrementalCovariance<IN>
     }
 
     @Override
-    public void apply(Tuple tuple,
+    public void apply(Tuple key,
                       GlobalWindow window,
                       Iterable<IN> input,
-                      Collector<Double> out) throws Exception {
+                      Collector<Tuple2<String, Double>> out) throws Exception {
 
         ValueState<Tuple4<MeanTuple, MeanTuple, Double, Double>> state =
             getRuntimeContext().getState(descriptor);
@@ -88,7 +88,7 @@ public class IncrementalCovariance<IN>
             state.update(new Tuple4<>(xmt, ymt, currentSDP, (double) elems.size()));
 
             // Naive covariance formula
-            out.collect(currentSDP / ( elems.size() - 1) );
+            out.collect(new Tuple2<>(key.toString(), currentSDP / ( elems.size() - 1) ));
         } else {
             double lastSDP = state.value().f2;
             MeanTuple lastXMean = state.value().f0;
@@ -105,7 +105,7 @@ public class IncrementalCovariance<IN>
             state.update(new Tuple4<>(
                 lastXMean, lastYMean, newSDP, elemsProcessed + elems.size()));
 
-            out.collect(newSDP / (sizeSum - 1));
+            out.collect(new Tuple2<>(key.toString(), newSDP / (sizeSum - 1)));
         }
     }
 

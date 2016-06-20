@@ -1,7 +1,12 @@
 package com.treelogic.proteus.incOperators;
 
-import com.treelogic.proteus.flink.examples.airquality.AirRegister;
-import com.treelogic.proteus.flink.incops.IncrementalCovariance;
+import static java.util.Arrays.asList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
@@ -9,10 +14,8 @@ import org.flinkspector.datastream.DataStreamTestEnvironment;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Arrays.asList;
+import com.treelogic.proteus.flink.examples.airquality.AirRegister;
+import com.treelogic.proteus.flink.incops.IncrementalCovariance;
 
 public class IncrementalCovarianceTest extends DataStreamTestBase {
 
@@ -32,7 +35,8 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
             createTestStream(createDataset(7))
             .keyBy("station")
             .countWindow(7)
-            .apply(new IncrementalCovariance<AirRegister>("o3", "co"));
+            .apply(new IncrementalCovariance<AirRegister>("o3", "co"))
+            .map(new Tuple2ToDouble());
 
         ExpectedRecords<Double> expected =
             new ExpectedRecords<Double>().expect(-340.3333333333333d);
@@ -46,7 +50,8 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
             createTestStream(createDataset(14))
             .keyBy("station")
             .countWindow(7)
-            .apply(new IncrementalCovariance<AirRegister>("o3", "co"));
+            .apply(new IncrementalCovariance<AirRegister>("o3", "co"))
+            .map(new Tuple2ToDouble());
 
         ExpectedRecords<Double> expected =
             new ExpectedRecords<Double>().expectAll(asList(
@@ -80,5 +85,17 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
             dataset.add(ar);
         }
         return dataset;
+    }
+    
+    private static class Tuple2ToDouble
+		implements MapFunction<Tuple2<String, Double>, Double> {
+
+		private static final long serialVersionUID = 1L;
+	
+		@Override
+		public Double map(Tuple2<String, Double> arg0) throws Exception {
+			return arg0.f1;
+		}
+	
     }
 }
