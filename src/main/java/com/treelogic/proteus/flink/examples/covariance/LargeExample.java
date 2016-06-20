@@ -24,6 +24,7 @@ public class LargeExample {
 	
 	public static final int WINDOW_SIZE = 2;
 	public static final String FILE = "./src/main/resources/datasets/smallDataset.csv";
+	public static final String OUTPUT = "/home/ezequiel.cimadevilla/tests/flinkOutput";
 
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment streamingEnv =
@@ -62,7 +63,7 @@ public class LargeExample {
 					return new Tuple3<>(arg0.f0, arg0.f1, new Date().getTime());
 				}
 			})
-            .writeAsCsv("/home/ezequiel.cimadevilla/tests/flinkOutput");
+            .writeAsCsv(OUTPUT);
 
         streamingEnv.execute("AirRegisters");
     }
