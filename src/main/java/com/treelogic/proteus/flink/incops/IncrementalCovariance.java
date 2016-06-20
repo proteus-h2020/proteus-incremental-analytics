@@ -1,5 +1,9 @@
 package com.treelogic.proteus.flink.incops;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -10,14 +14,12 @@ import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import com.treelogic.proteus.flink.incops.util.MeanTuple;
 
 public class IncrementalCovariance<IN>
     extends IncrementalOperation<IN, Double> {
 
-    private final static Long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
     private final String fieldX, fieldY;
 
     // Tuple4 - xMean, yMean, Sum of deviation products, Element count
@@ -96,11 +98,9 @@ public class IncrementalCovariance<IN>
             double sizeSum = elemsProcessed + elems.size();
             double newSDP = lastSDP + currentSDP
                 + (elemsProcessed * elems.size() * xMeanDiff * yMeanDiff / sizeSum);
-
-            lastXMean.incNum(sumX(elems));
-            lastXMean.incDenom(elems.size());
-            lastYMean.incNum(sumY(elems));
-            lastYMean.incDenom(elems.size());
+            
+            lastXMean.inc(sumX(elems), elems.size());
+            lastYMean.inc(sumY(elems), elems.size());
 
             state.update(new Tuple4<>(
                 lastXMean, lastYMean, newSDP, elemsProcessed + elems.size()));
@@ -123,44 +123,5 @@ public class IncrementalCovariance<IN>
             sum += t.f1;
         }
         return sum;
-    }
-
-    private static class MeanTuple {
-        private double num , denom;
-
-        MeanTuple() { }
-
-        MeanTuple(double num, double denom) {
-            this.num = num;
-            this.denom = denom;
-        }
-
-        double getNum() {
-            return num;
-        }
-
-        void setNum(double num) {
-            this.num = num;
-        }
-
-        double getDenom() {
-            return denom;
-        }
-
-        void setDenom(double denom) {
-            this.denom = denom;
-        }
-
-        double mean() {
-            return num / denom;
-        }
-
-        void incNum(double value) {
-            setNum(getNum() + value);
-        }
-
-        void incDenom(double value) {
-            setDenom(getDenom() + value);
-        }
     }
 }
