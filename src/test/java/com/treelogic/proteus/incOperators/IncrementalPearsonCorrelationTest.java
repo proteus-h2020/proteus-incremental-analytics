@@ -13,9 +13,9 @@ import org.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
 
 import com.treelogic.proteus.flink.examples.airquality.AirRegister;
-import com.treelogic.proteus.flink.incops.IncrementalCorrelation;
+import com.treelogic.proteus.flink.incops.IncrementalPearsonCorrelation;
 
-public class IncrementalCorrelationTest extends DataStreamTestBase {
+public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
 	
 	@Test
 	public void windowCorrelationTest() {
@@ -23,13 +23,29 @@ public class IncrementalCorrelationTest extends DataStreamTestBase {
 	            createTestStream(createDataset(7))
 	            .keyBy("station")
 	            .countWindow(7)
-	            .apply(new IncrementalCorrelation<AirRegister>("o3", "co"))
+	            .apply(new IncrementalPearsonCorrelation<AirRegister>("o3", "co"))
 	            .map(new Tuple2ToDouble());
 
-	        ExpectedRecords<Double> expected =
-	            new ExpectedRecords<Double>().expect(-0.360746551183269d);
+        ExpectedRecords<Double> expected =
+            new ExpectedRecords<Double>().expect(-0.360746551183269d);
 
-	        assertStream(stream, expected);
+        assertStream(stream, expected);
+	}
+	
+	@Test
+	public void twoWindowCorrelationTest() {
+		DataStream<Double> stream =
+	            createTestStream(createDataset(14))
+	            .keyBy("station")
+	            .countWindow(7)
+	            .apply(new IncrementalPearsonCorrelation<AirRegister>("o3", "co"))
+	            .map(new Tuple2ToDouble());
+
+        ExpectedRecords<Double> expected =
+            new ExpectedRecords<Double>().expectAll(asList(
+            		-0.360746551183269d, -0.34323076036293565d));
+
+        assertStream(stream, expected);
 	}
 	
 	private List<AirRegister> createDataset(int datasetSize) {
@@ -59,14 +75,14 @@ public class IncrementalCorrelationTest extends DataStreamTestBase {
     }
 	
 	private static class Tuple2ToDouble
-	implements MapFunction<Tuple2<String, Double>, Double> {
-
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	public Double map(Tuple2<String, Double> arg0) throws Exception {
-		return arg0.f1;
+		implements MapFunction<Tuple2<String, Double>, Double> {
+	
+		private static final long serialVersionUID = 1L;
+	
+		@Override
+		public Double map(Tuple2<String, Double> arg0) throws Exception {
+			return arg0.f1;
+		}
+	
 	}
-
-}
 }
