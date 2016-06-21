@@ -37,7 +37,7 @@ public class IncrementalCovariance<IN>
 		this.fieldY = fieldY;
 
 		descriptor = new ValueStateDescriptor<>(
-				"incremental-variance-descriptor",
+				"incremental-covariance-descriptor",
 				TypeInformation.of(new TypeHint<StatefulCovariance>() {}),
 				new StatefulCovariance());
 	}
@@ -46,8 +46,7 @@ public class IncrementalCovariance<IN>
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
 			Collector<Tuple2<String, Double>> out) throws Exception {
 
-		StatefulCovariance state = getRuntimeContext().getState(descriptor)
-				.value();
+		StatefulCovariance state = getRuntimeContext().getState(descriptor).value();
 
 		// TODO Set initial size equals to window size?
 		List<Double> xElems = new ArrayList<>(), yElems = new ArrayList<>();
