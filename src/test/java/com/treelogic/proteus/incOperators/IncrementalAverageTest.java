@@ -10,25 +10,12 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
-import org.flinkspector.datastream.DataStreamTestEnvironment;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.treelogic.proteus.flink.examples.airquality.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalAverage;
 
 public class IncrementalAverageTest extends DataStreamTestBase {
-
-	@BeforeClass
-	public static void beforeClass() {
-		try {
-			DataStreamTestEnvironment env = DataStreamTestEnvironment
-					.createTestEnvironment(1);
-			env.setTimeoutInterval(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Test
 	public void oneWindowTest() {
@@ -39,8 +26,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .apply(new IncrementalAverage<AirRegister>("o3"))
 	            .map(new Tuple2ToDouble());
 
-        ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>()
+        ExpectedRecords<Double> expected = new ExpectedRecords<Double>()
             	.expect(30.428571428571427d);
 
 	    assertStream(stream, expected);
