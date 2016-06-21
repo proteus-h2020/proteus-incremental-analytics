@@ -48,9 +48,7 @@ public class IncrementalMode<IN> extends
      * @param numDecimals Round decimals to numDecimals
      */
     public IncrementalMode(String field, int numValues, int numDecimals) {
-        if (field == null || field.equals("")) {
-            throw new IllegalArgumentException("Field cannot be empty");
-        }
+        checkField(field);
 
         this.field = field;
         this.numValues = numValues > 0 ? numValues : 1;
