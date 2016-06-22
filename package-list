@@ -1,10 +1,12 @@
 com.treelogic.proteus.flink.examples.airquality
+com.treelogic.proteus.flink.examples.covariance
 com.treelogic.proteus.flink.examples.football
 com.treelogic.proteus.flink.examples.mode
 com.treelogic.proteus.flink.examples.simplechart
 com.treelogic.proteus.flink.examples.utils
 com.treelogic.proteus.flink.examples.variance
 com.treelogic.proteus.flink.incops
+com.treelogic.proteus.flink.incops.util
 com.treelogic.proteus.flink.sink
 com.treelogic.proteus.network
 com.treelogic.proteus.visualization
