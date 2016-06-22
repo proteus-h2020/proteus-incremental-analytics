@@ -17,23 +17,22 @@ import org.apache.flink.api.java.tuple.Tuple2;
 public class StatefulVariance {
 
 	private double S1 = 0, T1 = 0;
-	private int windowCount = 0;
+	private long windowCount = 0;
 
 	public double apply(List<Double> elems) {
 		Tuple2<Double, Double> t = youngsCrammerFormula(elems);
-		int elemsSize = elems.size();
-
 		windowCount++;
 
+		// TODO Strategy pattern
 		if (windowCount == 1) {
 			// First window
 			S1 = t.f0;
 			T1 = t.f1;
 
-			return t.f0 / (elemsSize - 1);
+			return t.f0 / (elems.size() - 1);
 		} else {
 			// Subsequent windows, general variance update formula 2.1
-			double m = (windowCount - 1) * elemsSize, n = elemsSize;
+			double m = (windowCount - 1) * elems.size(), n = elems.size();
 
 			double S12 = generalUpdatingFormula(m, n, S1, t.f0, T1, t.f1);
 
