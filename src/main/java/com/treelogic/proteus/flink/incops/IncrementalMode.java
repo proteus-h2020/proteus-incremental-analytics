@@ -6,7 +6,6 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.streaming.api.functions.windowing.RichWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
@@ -24,7 +23,7 @@ import java.util.*;
  * @param <IN> POJO that contains fields to be analyzed
  */
 public class IncrementalMode<IN> extends
-    RichWindowFunction<IN, List<Tuple2<Double, Integer>>, Tuple, GlobalWindow> {
+    IncrementalOperation<IN, List<Tuple2<Double, Integer>>> {
 
     private static final long serialVersionUID = 1;
 
@@ -34,6 +33,10 @@ public class IncrementalMode<IN> extends
     private String field = "";
     private int numValues, numDecimals;
 
+    /**
+     * numValues = 1 and numDecimals = 0
+     * @param field
+     */
     public IncrementalMode(String field) {
         this(field, 1, 0);
     }
@@ -45,15 +48,13 @@ public class IncrementalMode<IN> extends
      * @param numDecimals Round decimals to numDecimals
      */
     public IncrementalMode(String field, int numValues, int numDecimals) {
-        if (field == null || field.equals("")) {
-            throw new IllegalArgumentException("Field cannot be empty");
-        }
+        checkField(field);
 
         this.field = field;
         this.numValues = numValues > 0 ? numValues : 1;
         this.numDecimals = numDecimals >= 0 ? numDecimals : 0;
 
-        stateDescriptor = new ValueStateDescriptor<Map<Double, Integer>>(
+        stateDescriptor = new ValueStateDescriptor<>(
             "mode-last-result",
             TypeInformation.of(new TypeHint<Map<Double, Integer>>() {}),
             new HashMap<Double, Integer>());
@@ -114,7 +115,7 @@ public class IncrementalMode<IN> extends
         TreeSet<Tuple2<Double, Integer>> set = new TreeSet<>(c);
 
         for (Map.Entry<Double, Integer> e : lastRecord.entrySet()) {
-            set.add(new Tuple2<Double, Integer>(e.getKey(), e.getValue()));
+            set.add(new Tuple2<>(e.getKey(), e.getValue()));
         }
 
         return set;

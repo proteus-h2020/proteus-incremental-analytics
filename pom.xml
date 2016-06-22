@@ -9,9 +9,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty-version>9.2.7.v20150116</jetty-version>
         <org.apache.flink>1.0.1</org.apache.flink>
+
         <compileSource>1.7</compileSource>
         <testCompileSource>1.8</testCompileSource>
+
+        <github.global.server>github-proteus</github.global.server>
+        <github.url>scm:git:ssh://git@github.com:proteus-h2020/proteus-backend.git</github.url>
     </properties>
+
+    <scm>
+        <developerConnection>${github.url}</developerConnection>
+    </scm>
 
     <dependencies>
         <!-- JUnit, for testing purposes -->
@@ -84,6 +92,7 @@
             </resource>
         </resources>
         <plugins>
+            <!-- Compile source code using java 7 and tests using java 8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -103,6 +112,49 @@
                             <source>${testCompileSource}</source>
                             <target>${testCompileSource}</target>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Generate javadocs and upload to Github -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <message>Updated javadocs for ${project.version}</message>
+                    <outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

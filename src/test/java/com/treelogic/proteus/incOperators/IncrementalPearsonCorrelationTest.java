@@ -13,43 +13,42 @@ import org.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
 
 import com.treelogic.proteus.flink.examples.airquality.AirRegister;
-import com.treelogic.proteus.flink.incops.IncrementalCovariance;
+import com.treelogic.proteus.flink.incops.IncrementalPearsonCorrelation;
 
-public class IncrementalCovarianceTest extends DataStreamTestBase {
-
-    @Test
-    public void naiveCovarianceTest() {
-        DataStream<Double> stream =
-            createTestStream(createDataset(7))
-            .keyBy("station")
-            .countWindow(7)
-            .apply(new IncrementalCovariance<AirRegister>("o3", "co"))
-            .map(new Tuple2ToDouble());
+public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
+	
+	@Test
+	public void windowCorrelationTest() {
+		DataStream<Double> stream =
+	            createTestStream(createDataset(7))
+	            .keyBy("station")
+	            .countWindow(7)
+	            .apply(new IncrementalPearsonCorrelation<AirRegister>("o3", "co"))
+	            .map(new Tuple2ToDouble());
 
         ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expect(-340.3333333333333d);
+            new ExpectedRecords<Double>().expect(-0.360746551183269d);
 
         assertStream(stream, expected);
-    }
-
-    @Test
-    public void combinedCovarianceTest() {
-        DataStream<Double> stream =
-            createTestStream(createDataset(14))
-            .keyBy("station")
-            .countWindow(7)
-            .apply(new IncrementalCovariance<AirRegister>("o3", "co"))
-            .map(new Tuple2ToDouble());
+	}
+	
+	@Test
+	public void twoWindowCorrelationTest() {
+		DataStream<Double> stream =
+	            createTestStream(createDataset(14))
+	            .keyBy("station")
+	            .countWindow(7)
+	            .apply(new IncrementalPearsonCorrelation<AirRegister>("o3", "co"))
+	            .map(new Tuple2ToDouble());
 
         ExpectedRecords<Double> expected =
             new ExpectedRecords<Double>().expectAll(asList(
-                -340.3333333333333d,
-                -322.4945054945055d));
+            		-0.360746551183269d, -0.34323076036293565d));
 
         assertStream(stream, expected);
-    }
-
-    private List<AirRegister> createDataset(int datasetSize) {
+	}
+	
+	private List<AirRegister> createDataset(int datasetSize) {
         String station = "station";
 
         List<Double> o3registers = asList(
@@ -74,10 +73,10 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
         }
         return dataset;
     }
-    
-    private static class Tuple2ToDouble
+	
+	private static class Tuple2ToDouble
 		implements MapFunction<Tuple2<String, Double>, Double> {
-
+	
 		private static final long serialVersionUID = 1L;
 	
 		@Override
@@ -85,5 +84,5 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
 			return arg0.f1;
 		}
 	
-    }
+	}
 }

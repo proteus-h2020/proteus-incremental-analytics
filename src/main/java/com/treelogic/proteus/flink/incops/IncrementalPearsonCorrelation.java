@@ -12,42 +12,40 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
-import com.treelogic.proteus.flink.incops.util.StatefulCovariance;
+import com.treelogic.proteus.flink.incops.util.StatefulPearsonCorrelation;
 
 /**
- * Incremental covariance using the updating formula described in
- * http://prod.sandia.gov/techlib/access-control.cgi/2008/086212.pdf
+ * Incremental implementation of the Pearson product-moment correlation coefficient
  *
  * @param <IN>
- *            Pojo type that contains the field to be analysed
  */
-public class IncrementalCovariance<IN>
+public class IncrementalPearsonCorrelation<IN>
 		extends IncrementalOperation<IN, Tuple2<String, Double>> {
 
 	private static final long serialVersionUID = 1L;
 
 	private final String fieldX, fieldY;
+	
+	private ValueStateDescriptor<StatefulPearsonCorrelation> descriptor;
 
-	private ValueStateDescriptor<StatefulCovariance> descriptor;
-
-	public IncrementalCovariance(String fieldX, String fieldY) {
-		checkFields(new String[] { fieldX, fieldY });
+	public IncrementalPearsonCorrelation(String fieldX, String fieldY) {
+		checkFields(new String[]{fieldX, fieldY});
 
 		this.fieldX = fieldX;
 		this.fieldY = fieldY;
 
-		descriptor = new ValueStateDescriptor<>(
-				"incremental-covariance-descriptor",
-				TypeInformation.of(new TypeHint<StatefulCovariance>() {}),
-				new StatefulCovariance());
+		descriptor = new ValueStateDescriptor<StatefulPearsonCorrelation>(
+				"incremental-pearson-correlation-descriptor",
+				TypeInformation.of(new TypeHint<StatefulPearsonCorrelation>() {}),
+				new StatefulPearsonCorrelation());
 	}
 
 	@Override
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
 			Collector<Tuple2<String, Double>> out) throws Exception {
 
-		StatefulCovariance state = getRuntimeContext().getState(descriptor).value();
-
+		StatefulPearsonCorrelation state = getRuntimeContext().getState(descriptor).value();
+		
 		// TODO Set initial size equals to window size?
 		List<Double> xElems = new ArrayList<>(), yElems = new ArrayList<>();
 
@@ -64,4 +62,5 @@ public class IncrementalCovariance<IN>
 		getRuntimeContext().getState(descriptor).update(state);
 		out.collect(new Tuple2<>(key.toString(), result));
 	}
+
 }
