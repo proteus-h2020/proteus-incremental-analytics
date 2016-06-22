@@ -13,6 +13,7 @@ public class StatefulCovariance {
 		double xMean = mean(xElems), yMean = mean(yElems);
 		double SDP = sumDeviationProducts(xElems, yElems, xMean, yMean);
 
+		// TODO Use strategy pattern
 		if(elemsProcessed == 0) {
             elemsProcessed = xElems.size();
             sumDeviationProducts = SDP;

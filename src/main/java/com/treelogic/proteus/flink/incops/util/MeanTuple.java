@@ -7,6 +7,7 @@ package com.treelogic.proteus.flink.incops.util;
  */
 public class MeanTuple {
 	
+	// TODO Count should be long
 	private double sum , count;
 
 	/**
