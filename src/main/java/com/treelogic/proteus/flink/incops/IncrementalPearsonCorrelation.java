@@ -1,9 +1,12 @@
 package com.treelogic.proteus.flink.incops;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -12,7 +15,9 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
+import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
 import com.treelogic.proteus.flink.incops.util.StatefulPearsonCorrelation;
+import com.treelogic.proteus.flink.utils.FieldUtils;
 
 /**
  * Incremental implementation of the Pearson product-moment correlation coefficient
@@ -20,47 +25,70 @@ import com.treelogic.proteus.flink.incops.util.StatefulPearsonCorrelation;
  * @param <IN>
  */
 public class IncrementalPearsonCorrelation<IN>
-		extends IncrementalOperation<IN, Tuple2<String, Double>> {
+		extends IncrementalOperation<IN, Map<String,Tuple2<String,Double>>> {
 
-	private static final long serialVersionUID = 1L;
-
-	private final String fieldX, fieldY;
+	private static final long serialVersionUID = 1L;	
+	private ValueStateDescriptor<Map<String, StatefulPearsonCorrelation>> descriptor;
 	
-	private ValueStateDescriptor<StatefulPearsonCorrelation> descriptor;
-
-	public IncrementalPearsonCorrelation(String fieldX, String fieldY) {
-		checkFields(new String[]{fieldX, fieldY});
-
-		this.fieldX = fieldX;
-		this.fieldY = fieldY;
-
-		descriptor = new ValueStateDescriptor<StatefulPearsonCorrelation>(
-				"incremental-pearson-correlation-descriptor",
-				TypeInformation.of(new TypeHint<StatefulPearsonCorrelation>() {}),
-				new StatefulPearsonCorrelation());
+	public IncrementalPearsonCorrelation(IncrementalConfiguration configuration) {
+		super(configuration);
 	}
 
 	@Override
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
-			Collector<Tuple2<String, Double>> out) throws Exception {
+			Collector<Map<String,Tuple2<String,Double>>> out) throws Exception {
 
-		StatefulPearsonCorrelation state = getRuntimeContext().getState(descriptor).value();
+		ValueState<Map<String, StatefulPearsonCorrelation>> state = getRuntimeContext().getState(descriptor);
 		
+		Map<String, StatefulPearsonCorrelation> pearsons = state.value();
+
 		// TODO Set initial size equals to window size?
-		List<Double> xElems = new ArrayList<>(), yElems = new ArrayList<>();
+		//List<Double> xElems = new ArrayList<>(), yElems = new ArrayList<>();
+		Map<String, List<Double>> xElemnsMap = new HashMap<String, List<Double>>();
+		Map<String, List<Double>> yElemnsMap = new HashMap<String, List<Double>>();
+		
+		for(IN in : input){
+			for(String field : this.configuration.getFields()){
+				List<Double> xElems = xElemnsMap.get(field);
+				if (xElems == null) {
+					xElems = new ArrayList<Double>();
+					xElemnsMap.put(field, xElems);
+				}
+				List<Double> yElems = yElemnsMap.get(field);
+				if (yElems == null) {
+					yElems = new ArrayList<Double>();
+					yElemnsMap.put(field, yElems);
+				}
 
-		for (IN in : input) {
-			Field fieldX = in.getClass().getDeclaredField(this.fieldX);
-			Field fieldY = in.getClass().getDeclaredField(this.fieldY);
-			fieldX.setAccessible(true);
-			fieldY.setAccessible(true);
-			xElems.add((Double) fieldX.get(in));
-			yElems.add((Double) fieldY.get(in));
+				String[] fNames = field.split(",");
+				
+				Double xValue = FieldUtils.getValue(in, fNames[0]);
+				Double yValue = FieldUtils.getValue(in, fNames[1]);
+
+				xElems.add(xValue);
+				yElems.add(yValue);
+				if (pearsons.get(field) == null) {
+					pearsons.put(field, new StatefulPearsonCorrelation());
+				}
+				
+			}
 		}
-
-		double result = state.apply(xElems, yElems);
-		getRuntimeContext().getState(descriptor).update(state);
-		out.collect(new Tuple2<>(key.toString(), result));
+		
+		Map<String, Tuple2<String, Double>> tupleMap = new HashMap<String, Tuple2<String, Double>>();
+		for (Entry<String, StatefulPearsonCorrelation> entry : pearsons.entrySet()) {
+			double result = entry.getValue().apply(xElemnsMap.get(entry.getKey()), yElemnsMap.get(entry.getKey()));
+			tupleMap.put(entry.getKey(), new Tuple2<String, Double>(key.toString(), result));
+		}
+		state.update(pearsons);
+		out.collect(tupleMap);
 	}
+
+	@Override
+	public void initializeDescriptor() {
+		descriptor = new ValueStateDescriptor<Map<String, StatefulPearsonCorrelation>>(
+				"incremental-pearson-correlation-descriptor",
+				TypeInformation.of(new TypeHint<Map<String, StatefulPearsonCorrelation>>() {}),
+				new HashMap<String, StatefulPearsonCorrelation>());
+	}		
 
 }

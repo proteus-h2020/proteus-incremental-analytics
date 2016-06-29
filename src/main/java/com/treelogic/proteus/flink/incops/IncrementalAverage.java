@@ -1,6 +1,8 @@
 package com.treelogic.proteus.flink.incops;
 
-import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
@@ -10,53 +12,54 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
+import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
 import com.treelogic.proteus.flink.incops.util.MeanTuple;
+import com.treelogic.proteus.flink.utils.FieldUtils;
 
-public class IncrementalAverage<IN>
-		extends IncrementalOperation<IN, Tuple2<String, Double>> {
+public class IncrementalAverage<IN> extends IncrementalOperation<IN, Map<String, Tuple2<String, Double>>> {
 
 	private static final long serialVersionUID = 1L;
+	private ValueStateDescriptor<Map<String, MeanTuple>> stateDescriptor;
 
-	// public static final String OP_NAME = "avg";
-
-	private String field;
-	private ValueStateDescriptor<MeanTuple> stateDescriptor;
-
-	public IncrementalAverage(String field) {
-		if (field == null || field.equals("")) {
-			throw new IllegalArgumentException("Field cannot be empty");
-		}
-
-		this.field = field;
-
-		stateDescriptor = new ValueStateDescriptor<>(
-			"last-result",
-			new TypeHint<MeanTuple>() {}.getTypeInfo(),
-			new MeanTuple());
-
+	public IncrementalAverage(IncrementalConfiguration configuration) {
+		super(configuration);
 	}
 
 	@Override
-	public void apply(Tuple key,
-			GlobalWindow window,
-			Iterable<IN> input,
-			Collector<Tuple2<String, Double>> collector) throws Exception {
-		
+	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
+			Collector<Map<String, Tuple2<String, Double>>> collector) throws Exception {
+
 		// Get last window interaction values
-		ValueState<MeanTuple> state = getRuntimeContext().getState(stateDescriptor);
-		MeanTuple lastRegister = state.value();
+		ValueState<Map<String, MeanTuple>> state = getRuntimeContext().getState(stateDescriptor);
+		Map<String, MeanTuple> meanTuples = state.value();
+
+		String[] fields = this.configuration.getFields();
 
 		for (IN in : input) {
-			Field field = in.getClass().getDeclaredField(this.field);
-			field.setAccessible(true);
+			for (String fName : fields) {
+				MeanTuple meanTuple = meanTuples.get(fName);
+				if (meanTuple == null) {
+					meanTuple = new MeanTuple();
+					meanTuples.put(fName, meanTuple);
+				}
+				Double value = FieldUtils.getValue(in, fName);
+				meanTuple.inc(value);
+			}
+		}
+		// Update status
+		state.update(meanTuples);
 
-			Double value = (Double) field.get(in);
-			lastRegister.inc(value);
+		Map<String, Tuple2<String, Double>> tupleMap = new HashMap<String, Tuple2<String, Double>>();
+		for (Entry<String, MeanTuple> entry : meanTuples.entrySet()) {
+			tupleMap.put(entry.getKey(), new Tuple2<String, Double>(key.toString(), entry.getValue().mean()));
 		}
 
-		// Update status
-		state.update(lastRegister);
+		collector.collect(tupleMap);
+	}
 
-		collector.collect(new Tuple2<>(key.toString(), lastRegister.mean()));
+	@Override
+	public void initializeDescriptor() {
+		stateDescriptor = new ValueStateDescriptor<>("last-result", new TypeHint<Map<String, MeanTuple>>() {
+		}.getTypeInfo(), new HashMap<String, MeanTuple>());
 	}
 }

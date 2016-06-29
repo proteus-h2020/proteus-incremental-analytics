@@ -5,46 +5,52 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
 
-import com.treelogic.proteus.flink.examples.airquality.AirRegister;
+import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalCovariance;
+import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.utils.TestUtils;
 
 public class IncrementalCovarianceTest extends DataStreamTestBase {
 
     @Test
     public void naiveCovarianceTest() {
-        DataStream<Double> stream =
+		IncrementalConfiguration conf = new IncrementalConfiguration();
+		conf.fields("o3,co");
+		
+        DataStream<List<Double>> stream =
             createTestStream(createDataset(7))
             .keyBy("station")
             .countWindow(7)
-            .apply(new IncrementalCovariance<AirRegister>("o3", "co"))
-            .map(new Tuple2ToDouble());
+            .apply(new IncrementalCovariance<AirRegister>(conf))
+            .map(new TestUtils.Tuple2ToListDouble());
 
-        ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expect(-340.3333333333333d);
+        ExpectedRecords<List<Double>> expected =
+            new ExpectedRecords<List<Double>>().expect(asList(-340.3333333333333d));
 
         assertStream(stream, expected);
     }
 
     @Test
     public void combinedCovarianceTest() {
-        DataStream<Double> stream =
+		IncrementalConfiguration conf = new IncrementalConfiguration();
+		conf.fields("o3,co");
+		
+        DataStream<List<Double>> stream =
             createTestStream(createDataset(14))
             .keyBy("station")
             .countWindow(7)
-            .apply(new IncrementalCovariance<AirRegister>("o3", "co"))
-            .map(new Tuple2ToDouble());
+            .apply(new IncrementalCovariance<AirRegister>(conf))
+            .map(new TestUtils.Tuple2ToListDouble());
 
-        ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expectAll(asList(
-                -340.3333333333333d,
-                -322.4945054945055d));
+        ExpectedRecords<List<Double>> expected =
+            new ExpectedRecords<List<Double>>().expectAll(asList(
+                asList(-340.3333333333333d),
+                asList(-322.4945054945055d)));
 
         assertStream(stream, expected);
     }
@@ -75,15 +81,5 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
         return dataset;
     }
     
-    private static class Tuple2ToDouble
-		implements MapFunction<Tuple2<String, Double>, Double> {
-
-		private static final long serialVersionUID = 1L;
-	
-		@Override
-		public Double map(Tuple2<String, Double> arg0) throws Exception {
-			return arg0.f1;
-		}
-	
-    }
+    
 }

@@ -5,45 +5,51 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
 
-import com.treelogic.proteus.flink.examples.airquality.AirRegister;
+import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalPearsonCorrelation;
+import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.utils.TestUtils;
 
 public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
 	
 	@Test
 	public void windowCorrelationTest() {
-		DataStream<Double> stream =
+		IncrementalConfiguration conf = new IncrementalConfiguration();
+		conf.fields("o3");
+		DataStream<List<Double>> stream =
 	            createTestStream(createDataset(7))
 	            .keyBy("station")
 	            .countWindow(7)
-	            .apply(new IncrementalPearsonCorrelation<AirRegister>("o3", "co"))
-	            .map(new Tuple2ToDouble());
+	            .apply(new IncrementalPearsonCorrelation<AirRegister>(conf))
+	            .map(new TestUtils.Tuple2ToListDouble());
 
-        ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expect(-0.360746551183269d);
+        ExpectedRecords<List<Double>> expected =
+            new ExpectedRecords<List<Double>>().expect(asList(-0.360746551183269d));
 
         assertStream(stream, expected);
 	}
 	
 	@Test
 	public void twoWindowCorrelationTest() {
-		DataStream<Double> stream =
+		IncrementalConfiguration conf = new IncrementalConfiguration();
+		conf.fields("o3");
+		DataStream<List<Double>> stream =
 	            createTestStream(createDataset(14))
 	            .keyBy("station")
 	            .countWindow(7)
-	            .apply(new IncrementalPearsonCorrelation<AirRegister>("o3", "co"))
-	            .map(new Tuple2ToDouble());
+	            .apply(new IncrementalPearsonCorrelation<AirRegister>(conf))
+	            .map(new TestUtils.Tuple2ToListDouble());
 
-        ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expectAll(asList(
-            		-0.360746551183269d, -0.34323076036293565d));
+        ExpectedRecords<List<Double>> expected =
+            new ExpectedRecords<List<Double>>().expectAll(asList(
+            		asList(-0.360746551183269d),
+            		asList(-0.34323076036293565d)
+            ));
 
         assertStream(stream, expected);
 	}
@@ -73,16 +79,4 @@ public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
         }
         return dataset;
     }
-	
-	private static class Tuple2ToDouble
-		implements MapFunction<Tuple2<String, Double>, Double> {
-	
-		private static final long serialVersionUID = 1L;
-	
-		@Override
-		public Double map(Tuple2<String, Double> arg0) throws Exception {
-			return arg0.f1;
-		}
-	
-	}
 }
