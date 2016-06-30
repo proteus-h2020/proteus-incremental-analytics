@@ -16,6 +16,8 @@ import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.entities.IncResult;
+import com.treelogic.proteus.flink.incops.util.StatefulAverage;
 import com.treelogic.proteus.flink.incops.util.StatefulPearsonCorrelation;
 import com.treelogic.proteus.flink.utils.FieldUtils;
 
@@ -25,7 +27,7 @@ import com.treelogic.proteus.flink.utils.FieldUtils;
  * @param <IN>
  */
 public class IncrementalPearsonCorrelation<IN>
-		extends IncrementalOperation<IN, Map<String,Tuple2<String,Double>>> {
+		extends IncrementalOperation<IN, StatefulPearsonCorrelation> {
 
 	private static final long serialVersionUID = 1L;	
 	private ValueStateDescriptor<Map<String, StatefulPearsonCorrelation>> descriptor;
@@ -36,7 +38,7 @@ public class IncrementalPearsonCorrelation<IN>
 
 	@Override
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
-			Collector<Map<String,Tuple2<String,Double>>> out) throws Exception {
+			Collector<IncResult<StatefulPearsonCorrelation>> out) throws Exception {
 
 		ValueState<Map<String, StatefulPearsonCorrelation>> state = getRuntimeContext().getState(descriptor);
 		
@@ -73,14 +75,16 @@ public class IncrementalPearsonCorrelation<IN>
 				
 			}
 		}
-		
-		Map<String, Tuple2<String, Double>> tupleMap = new HashMap<String, Tuple2<String, Double>>();
+		IncResult<StatefulPearsonCorrelation> result = new IncResult<>();
+		//Map<String, Tuple2<String, Double>> tupleMap = new HashMap<String, Tuple2<String, Double>>();
 		for (Entry<String, StatefulPearsonCorrelation> entry : pearsons.entrySet()) {
-			double result = entry.getValue().apply(xElemnsMap.get(entry.getKey()), yElemnsMap.get(entry.getKey()));
-			tupleMap.put(entry.getKey(), new Tuple2<String, Double>(key.toString(), result));
+			entry.getValue().apply(xElemnsMap.get(entry.getKey()), yElemnsMap.get(entry.getKey()));
+ 			//System.out.println(result);
+			//double result = entry.getValue().apply(xElemnsMap.get(entry.getKey()), yElemnsMap.get(entry.getKey()));
+			//tupleMap.put(entry.getKey(), new Tuple2<String, Double>(key.toString(), result));
 		}
 		state.update(pearsons);
-		out.collect(tupleMap);
+		out.collect(result);
 	}
 
 	@Override

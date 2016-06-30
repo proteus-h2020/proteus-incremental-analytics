@@ -14,7 +14,7 @@ import org.apache.flink.api.java.tuple.Tuple2;
  * http://i.stanford.edu/pub/cstr/reports/cs/tr/79/773/CS-TR-79-773.pdf
  *
  */
-public class StatefulVariance {
+public class StatefulVariance extends Stateful{
 
 	private double S1 = 0, T1 = 0;
 	private int windowCount = 0;

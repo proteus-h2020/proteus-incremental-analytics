@@ -11,11 +11,12 @@ import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.entities.IncResult;
+import com.treelogic.proteus.flink.incops.util.Stateful;
 import com.treelogic.proteus.flink.incops.util.StatefulCovariance;
 import com.treelogic.proteus.flink.utils.FieldUtils;
 
@@ -26,8 +27,28 @@ import com.treelogic.proteus.flink.utils.FieldUtils;
  * @param <IN>
  *            Pojo type that contains the field to be analysed
  */
-public class IncrementalCovariance<IN> extends IncrementalOperation<IN, Map<String, Tuple2<String, Double>>> {
+public class IncrementalCovariance<IN> extends IncrementalOperation<IN, StatefulCovariance> {
 
+
+	private static final long serialVersionUID = 1L;
+
+	public IncrementalCovariance(IncrementalConfiguration configuration) {
+		super(configuration, new StatefulCovariance());
+	}
+
+	@Override
+	protected void updateWindow(String field, List<Number> numbers, StatefulCovariance status) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	
+	
+	
+	
+	
+	/**
 	private static final long serialVersionUID = 1L;
 	private ValueStateDescriptor<Map<String, StatefulCovariance>> descriptor;
 
@@ -38,7 +59,7 @@ public class IncrementalCovariance<IN> extends IncrementalOperation<IN, Map<Stri
 
 	@Override
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input,
-			Collector<Map<String, Tuple2<String, Double>>> out) throws Exception {
+			Collector<IncResult<StatefulCovariance>> collector) throws Exception {
 
 		ValueState<Map<String, StatefulCovariance>> state = getRuntimeContext().getState(descriptor);
 
@@ -75,16 +96,18 @@ public class IncrementalCovariance<IN> extends IncrementalOperation<IN, Map<Stri
 			}
 		}
 
-		Map<String, Tuple2<String, Double>> tupleMap = new HashMap<String, Tuple2<String, Double>>();
+		IncResult<StatefulCovariance> result = new IncResult<StatefulCovariance>();
 
 		for (Entry<String, StatefulCovariance> entry : covariances.entrySet()) {
-			double result = entry.getValue().apply(xElemnsMap.get(entry.getKey()), yElemnsMap.get(entry.getKey()));
-			tupleMap.put(entry.getKey(), new Tuple2<String, Double>(key.toString(), result));
+			StatefulCovariance status = entry.getValue();
+			status.apply(xElemnsMap.get(entry.getKey()), yElemnsMap.get(entry.getKey()));
+			result.put(entry.getKey(), key.toString(), status);
+
 		}
 
 		state.update(covariances);
 
-		out.collect(tupleMap);
+		collector.collect(result);
 	}
 
 	@Override
@@ -93,4 +116,5 @@ public class IncrementalCovariance<IN> extends IncrementalOperation<IN, Map<Stri
 				TypeInformation.of(new TypeHint<Map<String, StatefulCovariance>>() {
 				}), new HashMap<String, StatefulCovariance>());
 	}
+	**/
 }

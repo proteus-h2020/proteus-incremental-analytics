@@ -1,23 +1,28 @@
 package com.treelogic.proteus.flink.incops.util;
 
+import java.util.List;
+
 /**
  * Tuple that contains sum and count of elements. Used to compute mean
  * values associatively. 
  *
  */
-public class MeanTuple {
+public class StatefulAverage extends Stateful<Number>{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6953929745457825750L;
 	private double sum , count;
 
 	/**
 	 * Sum and count = 0
 	 */
-    public MeanTuple() { 
-    	sum = 0;
-    	count = 0;
+    public StatefulAverage() { 
+    	
     }
 
-    public MeanTuple(double sum, double count) {
+    public StatefulAverage(double sum, double count) {
     	checkCountParameter(count);
     	
         this.sum = sum;
@@ -25,18 +30,11 @@ public class MeanTuple {
     }
 
     /**
-     * @return sum / count
-     */
-    public double mean() {
-    	return count == 0 ? 0 : sum / count;
-    }
-
-    /**
      * Increments sum by value and count by 1. Same as inc(value, 1).
      * 
      * @param value
      */
-    public void inc(double value) {
+    private void inc(Number value) {
     	inc(value, 1);
     }
     
@@ -46,11 +44,11 @@ public class MeanTuple {
      * @param sum
      * @param count
      */
-    public void inc(double sum, double count) {
+    private void inc(Number sum, int count) {
     	checkCountParameter(count);
-    	
-    	this.sum += sum;
+    	this.sum += sum.doubleValue();
     	this.count += count;
+    	calculate();
     }
     
     private void checkCountParameter(double count) {
@@ -59,4 +57,37 @@ public class MeanTuple {
     				"MeanTuple count cannot be less than one");
     	}
     }
+    
+
+	@Override
+	public Number value() {
+		return this.value;
+	}
+
+	@Override
+	public void calculate() {
+		this.value  = (count == 0 ? 0 : sum / count);
+	}
+
+	@Override
+	public void add(Number[] values) {
+		for(Number v: values)	{
+			inc(v);
+		}
+	}
+
+	@Override
+	public void add(Number v0) {
+		inc(v0);	
+	}
+
+	@Override
+	public void add(List<Number> values) {
+		for(Number number : values){
+			inc(number);
+		}
+		
+	}
+
+
 }

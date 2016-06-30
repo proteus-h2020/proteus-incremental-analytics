@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalAverage;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.util.StatefulAverage;
 import com.treelogic.proteus.utils.TestUtils;
 
 public class IncrementalAverageTest extends DataStreamTestBase {
@@ -26,8 +27,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .keyBy("station")
 	            .countWindow(7)
 	            .apply(new IncrementalAverage<AirRegister>(conf))
-	            //.apply(new IncrementalAverage<AirRegister>("o3"))
-	            .map(new TestUtils.Tuple2ToListDouble());
+	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage, Double>());
 		
         ExpectedRecords<List<Double>> expected = new ExpectedRecords<List<Double>>()
             	.expect(asList(30.428571428571427d));
@@ -45,7 +45,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .keyBy("station")
 	            .countWindow(7)
 	            .apply(new IncrementalAverage<AirRegister>(conf))
-	            .map(new TestUtils.Tuple2ToListDouble());
+	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage, Double>());
 		
 
         ExpectedRecords<List<Double>> expected =

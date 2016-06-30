@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 
+import com.treelogic.proteus.flink.incops.entities.IncResult;
+import com.treelogic.proteus.flink.incops.util.Stateful;
+
 public class TestUtils {
 
 	public static class Tuple2ToDouble implements MapFunction<Tuple2<String, Double>, Double> {
@@ -32,6 +35,20 @@ public class TestUtils {
 				values.add(e.getValue().f1);
 			}
 			return values;
+		}
+	}
+	
+	public static class IncResult2ToDouble<T extends Stateful<S>, S> implements MapFunction<IncResult<T>, List<S>> {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public List<S> map(IncResult<T> r) throws Exception {
+			List<S> results = new ArrayList<S>();
+			for(Entry<String, Tuple2<String, T>> e : r.entrySet()){
+				results.add(e.getValue().f1.value());
+			}
+			return results;
 		}
 
 	}
