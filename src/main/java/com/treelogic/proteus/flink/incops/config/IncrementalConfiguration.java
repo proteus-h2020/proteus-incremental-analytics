@@ -6,14 +6,14 @@ public class IncrementalConfiguration implements Serializable{
 
 
 	private static final long serialVersionUID = 3660071657881168289L;
-	private String[] fields;
+	private OpParameter[] fields;
 	private Class<?> to;
 
 	public IncrementalConfiguration() {
 
 	}
 
-	public IncrementalConfiguration fields(String... fields) {
+	public IncrementalConfiguration fields(OpParameter... fields) {
 		this.fields = fields;
 		return this;
 	}
@@ -23,7 +23,7 @@ public class IncrementalConfiguration implements Serializable{
 		return this;
 	}
 
-	public String[] getFields() {
+	public OpParameter[] getFields() {
 		return fields;
 	}
 

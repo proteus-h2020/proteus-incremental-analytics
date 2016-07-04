@@ -15,8 +15,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalCovariance;
-import com.treelogic.proteus.flink.incops.IncrementalVariance;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.config.OpParameter;
 
 public class CovarianceExample {
 	public static final int WINDOW_SIZE = 2;
@@ -50,7 +50,7 @@ public class CovarianceExample {
 
         
         IncrementalConfiguration configuration = new IncrementalConfiguration();
-        configuration.fields("o3,co");
+        configuration.fields(new OpParameter("o3","co"));
         stream
             .keyBy("station")
             .countWindow(WINDOW_SIZE)

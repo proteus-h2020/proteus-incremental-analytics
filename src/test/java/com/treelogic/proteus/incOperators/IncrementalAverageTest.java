@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalAverage;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.config.OpParameter;
 import com.treelogic.proteus.flink.incops.util.StatefulAverage;
 import com.treelogic.proteus.utils.TestUtils;
 
@@ -21,7 +22,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	@Test
 	public void oneWindowTest() {
 		IncrementalConfiguration conf = new IncrementalConfiguration();
-		conf.fields("o3");
+		conf.fields(new OpParameter("o3"));
 		DataStream<List<Double>> stream = this
 	            .createTestStream(createDataset(7))
 	            .keyBy("station")
@@ -38,7 +39,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	@Test
 	public void twoWindowTest() {
 		IncrementalConfiguration conf = new IncrementalConfiguration();
-		conf.fields("o3");
+		conf.fields(new OpParameter("o3"));
 		
 		DataStream<List<Double>> stream = this
 	            .createTestStream(createDataset(14))

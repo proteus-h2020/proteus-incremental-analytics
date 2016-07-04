@@ -1,9 +1,12 @@
 package com.treelogic.proteus.flink.incops;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,28 +19,30 @@ import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
-import com.treelogic.proteus.flink.incops.entities.IncResult;
+import com.treelogic.proteus.flink.incops.config.OpParameter;
+import com.treelogic.proteus.flink.incops.states.DataSerie;
+import com.treelogic.proteus.flink.incops.states.IncResult;
 import com.treelogic.proteus.flink.incops.util.Stateful;
 import com.treelogic.proteus.flink.utils.FieldUtils;
 
-public abstract class IncrementalOperation<IN, OUT extends Stateful<Number>>
+public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 		extends RichWindowFunction<IN, IncResult<OUT>, Tuple, GlobalWindow> {
 
 	protected ValueStateDescriptor<Map<String, OUT>> stateDescriptor;
 
-	private boolean isStateInitialize;
+	protected abstract int numberOfRequiredDataSeries();
+
+	private boolean isStateInitialized;
 
 	private static final long serialVersionUID = 1L;
-	
-	private static final String ERROR = "Field cannot neither be null nor empty";
 
 	protected IncrementalConfiguration configuration;
-	
-	protected Log log = LogFactory.getLog(this.getClass());
-	
-	private Stateful<?> stateful;
 
-	protected abstract void updateWindow(String field, List<Number> numbers, OUT status);
+	protected abstract void updateWindow(String field, List<DataSerie> dataSeries, OUT status);
+
+	protected Log log = LogFactory.getLog(this.getClass());
+
+	private Stateful<?> stateful;
 
 	public IncrementalOperation(IncrementalConfiguration configuration, Stateful<?> stateful) {
 		this.configuration = configuration;
@@ -52,35 +57,63 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Number>>
 	@Override
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncResult<OUT>> out)
 			throws Exception {
-		if (!isStateInitialize) {
+		if (!isStateInitialized) {
 			createState();
-			isStateInitialize = true;
+			isStateInitialized = true;
 		}
-		String[] fields = this.configuration.getFields();
+		OpParameter[] parameters = this.configuration.getFields();
 		ValueState<Map<String, OUT>> state = getRuntimeContext().getState(stateDescriptor);
 		Map<String, OUT> stateValues = state.value();
 		MultiValueMap values = new MultiValueMap();
 
 		// Loop values & fields
 		for (IN in : input) {
-			for (String fName : fields) {
-				Double value = FieldUtils.getValue(in, fName);
-				values.put(fName, value);
+			for (OpParameter parameter : parameters) {
+				for (String field : parameter.getFields()) {
+					Double value = FieldUtils.getValue(in, field);
+					values.put(field, value);
+				}
 			}
 		}
 
 		applyOperation(values, stateValues);
 		state.update(stateValues);
 
+		IncResult<OUT> result = new IncResult<OUT>();
+
+		for (Entry<String, OUT> entry : stateValues.entrySet()) {
+			result.put(entry.getKey(), key.toString(), entry.getValue());
+		}
+
+		out.collect(result);
+
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void applyOperation(MultiValueMap values, Map<String, OUT> states) {
-		for (Object field : values.keySet()) {
-			List<Number> numbers = (List<Number>) values.get(field);
-			OUT state = states.get(field);
-			updateWindow(field.toString(), numbers, state);
+		OpParameter[] parameters = this.configuration.getFields();
+		List<DataSerie> dataSeries = new ArrayList<DataSerie>();
+
+		for (OpParameter parameter : parameters) {
+			dataSeries.clear();
+			for (String field : parameter.getFields()) {
+				DataSerie serie = new DataSerie().field(field).values((List<Double>) values.get(field));
+				dataSeries.add(serie);
+			}
+			OUT state = states.get(parameter.getComposedName());
+			if(assertWindowRestriction(dataSeries)){
+				updateWindow(parameter.getComposedName(), dataSeries, state);
+			}
 		}
+
+	}
+
+	private boolean assertWindowRestriction(List<DataSerie> series) {
+		if (series.size() != numberOfRequiredDataSeries()) {
+			throw new IllegalStateException(this.getClass().getSimpleName() + " should receive just "
+					+ numberOfRequiredDataSeries() + " data Serie. Instead: " + series.size());
+		}
+		return true;
 	}
 
 	private void initializeDescriptor() {
@@ -97,12 +130,12 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Number>>
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		String[] fields = this.configuration.getFields();
+		OpParameter[] opParameters = this.configuration.getFields();
 
 		Class<OUT> clazz = (Class<OUT>) stateful.getClass();
-		for (String field : fields) {
+		for (OpParameter field : opParameters) {
 			try {
-				stateValues.put(field, clazz.newInstance());
+				stateValues.put(field.getComposedName(), clazz.newInstance());
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
@@ -112,7 +145,5 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Number>>
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

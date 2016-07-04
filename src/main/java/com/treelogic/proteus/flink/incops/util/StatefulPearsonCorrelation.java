@@ -2,32 +2,40 @@ package com.treelogic.proteus.flink.incops.util;
 
 import java.util.List;
 
+import com.treelogic.proteus.flink.incops.states.DataSerie;
+
 public class StatefulPearsonCorrelation extends Stateful<Double>{
-	
+
+	private static final long serialVersionUID = 1L;
 	private StatefulVariance xVariance = new StatefulVariance(),
 			yVariance = new StatefulVariance();
 	private StatefulCovariance covariance = new StatefulCovariance();
 	
-	public double apply(List<Double> xElems, List<Double> yElems) {
-		double x = xVariance.apply(xElems);
-		double y = yVariance.apply(yElems);
-		double c = covariance.apply(xElems, yElems);
-		
-		return c / (Math.sqrt(x * y));
-	}
 
 	@Override
 	public Double value() {
-		calculate();
 		return this.value;
 	}
 
 	@Override
-	public void calculate(List<Double>... values) {
-		double x = xVariance.apply(values[0]);
-		double y = yVariance.apply(values[1]);
-		double c = covariance.apply(values[0], values[1]);
-		this.value = c / (Math.sqrt(x * y));
+	public void apply(List<DataSerie> series) {
+		DataSerie xSerie = series.get(0);
+		DataSerie ySerie = series.get(1);
+		
+		List<Double> xElems = xSerie.values();
+		List<Double> yElems = ySerie.values();
+		
+		xVariance.apply(xSerie);
+		double x = xVariance.value();
+		
+		yVariance.apply(ySerie);
+		double y = yVariance.value;
+		
+		covariance.apply(series);
+		double c = covariance.value();
+		
+		this.value = ( c / (Math.sqrt(x * y)) );		
 	}
+	
 
 }

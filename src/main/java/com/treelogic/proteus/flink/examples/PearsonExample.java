@@ -16,6 +16,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalPearsonCorrelation;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.config.OpParameter;
 
 public class PearsonExample {
 	public static final int WINDOW_SIZE = 2;
@@ -49,7 +50,7 @@ public class PearsonExample {
 
         
         IncrementalConfiguration configuration = new IncrementalConfiguration();
-        configuration.fields("o3,so2", "pm10,o3");
+        configuration.fields(new OpParameter("o3","so2"));
         stream
             .keyBy("station")
             .countWindow(WINDOW_SIZE)

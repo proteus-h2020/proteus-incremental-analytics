@@ -3,6 +3,8 @@ package com.treelogic.proteus.flink.incops.util;
 import java.io.Serializable;
 import java.util.List;
 
+import com.treelogic.proteus.flink.incops.states.DataSerie;
+
 public abstract class Stateful<T> implements Serializable {
 
 
@@ -11,13 +13,7 @@ public abstract class Stateful<T> implements Serializable {
 	protected T value;
 
 	public abstract T value();
-	
-	public abstract void calculate();
-	
-	public abstract void add (T value);
-	
-	public abstract void add (T[] values);
-	
-	public abstract void add (List<T> values);
+		
+	public abstract void apply (List<DataSerie> values);
 	
 }

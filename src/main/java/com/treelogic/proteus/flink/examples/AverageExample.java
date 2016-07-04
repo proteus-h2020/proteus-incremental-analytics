@@ -16,6 +16,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalAverage;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.config.OpParameter;
 
 public class AverageExample {
 	public static final int WINDOW_SIZE = 2;
@@ -49,7 +50,12 @@ public class AverageExample {
 
         
         IncrementalConfiguration configuration = new IncrementalConfiguration();
-        configuration.fields("o3", "co", "so2", "pm10");
+        configuration.fields(
+        			new OpParameter("o3") ,
+        			new OpParameter("co"),
+        			new OpParameter("so2")
+        		//	new OpParameter("pm10")
+        );
         stream
             .keyBy("station")
             .countWindow(WINDOW_SIZE)

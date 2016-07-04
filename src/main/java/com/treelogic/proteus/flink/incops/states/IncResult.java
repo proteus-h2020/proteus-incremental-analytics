@@ -1,4 +1,4 @@
-package com.treelogic.proteus.flink.incops.entities;
+package com.treelogic.proteus.flink.incops.states;
 
 import java.util.HashMap;
 import java.util.Map;
