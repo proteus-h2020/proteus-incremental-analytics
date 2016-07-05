@@ -146,6 +146,8 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.12</version>
                 <configuration>
+                <userName>travis-ci</userName>
+                	<oauth2Token>${env.GITHUB_OAUTH_TOKEN}</oauth2Token>
                     <message>Updated javadocs for ${project.version}</message>
                     <outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory>
                 </configuration>
