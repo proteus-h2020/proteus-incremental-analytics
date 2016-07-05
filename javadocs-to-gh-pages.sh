@@ -20,7 +20,7 @@ rm -rf ./*
 cp -R $JAVADOC_DIR/target/site/apidocs/* .
 git add -A .
 git commit -m "[DOCS-$TRAVIS_BUILD_NUMBER] Add javadocs"
-git push -q upstream HEAD:gh-pages
+git push -f origin gh-pages
 
 
 echo -e "Published Javadoc to gh-pages.\n"
