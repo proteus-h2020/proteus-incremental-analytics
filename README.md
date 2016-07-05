@@ -1,5 +1,6 @@
 # proteus-backend
 [![Build Status](https://travis-ci.org/proteus-h2020/proteus-backend.svg?branch=development)](https://travis-ci.org/proteus-h2020/proteus-backend)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ffdb5f3f2f547578186867a24cf1f93)](https://www.codacy.com/app/0xnacho/proteus-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=proteus-h2020/proteus-backend&amp;utm_campaign=Badge_Grade)
 
 
 # What is PROTEUS
