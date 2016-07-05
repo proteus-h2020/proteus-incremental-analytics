@@ -4,19 +4,27 @@
 	<groupId>com.treelogic.proteus</groupId>
 	<artifactId>proteus</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty-version>9.2.7.v20150116</jetty-version>
 		<org.apache.flink>1.0.1</org.apache.flink>
 		<compileSource>1.7</compileSource>
 		<testCompileSource>1.8</testCompileSource>
-
-		<github.global.server>github</github.global.server>
-		<github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
 	</properties>
 
-
-
+	<!--  Avoid errors on mvn javadoc:javadoc-->
+	<profiles>
+		<profile>
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
+	</profiles>
 	<dependencies>
 		<!-- JUnit, for testing purposes -->
 		<dependency>
@@ -113,69 +121,30 @@
 			</plugin>
 
 			<!-- Generate javadocs and upload to Github -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-				</configuration>
-			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-project-info-reports-plugin</artifactId> 
+				<version>2.9</version> <configuration> <dependencyLocationsEnabled>false</dependencyLocationsEnabled> 
+				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<configuration>
-					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-					<failOnError>false</failOnError>
-					<aggregate>true</aggregate>
-					<breakiterator>true</breakiterator>
-					<detectLinks>true</detectLinks>
-					<detectOfflineLinks>true</detectOfflineLinks>
-					<links>
-						<link>http://download.oracle.com/javase/7/docs/api/</link>
-						<link>http://download.oracle.com/javaee/7/api/</link>
-						<link>http://docs.spring.io/spring/docs/current/javadoc-api/</link>
-						<link>http://docs.spring.io/spring-data/data-jpa/docs/current/api/</link>
-						<link>http://slf4j.org/api/</link>
-						<link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-						<link>http://junit.sourceforge.net/javadoc/</link>
-						<link>http://mybatis.org/mybatis-3/apidocs/reference/</link>
-						<link>http://mybatis.org/spring/apidocs/reference/</link>
-					</links>
-					<linksource>true</linksource>
-					<show>private</show>
-				</configuration>
+				<version>2.9</version>
 				<executions>
 					<execution>
-						<phase>site</phase>
+						<id>attach-javadocs</id>
 						<goals>
-							<goal>javadoc</goal>
+							<goal>jar</goal>
 						</goals>
+						<configuration>
+							<failOnError>false</failOnError>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.12</version>
-				<configuration>
-					<repositoryName>proteus-backend</repositoryName>
-					<repositoryOwner>proteus-h2020</repositoryOwner>
-					<userName>travis-ci</userName>
-					<oauth2Token>${github.global.oauth2Token}</oauth2Token>
-					<message>Creating site for ${project.artifactId} ${project.version}</message>
-					<outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>site</phase>
-						<goals>
-							<goal>site</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!-- <plugin> <groupId>com.github.github</groupId> <artifactId>site-maven-plugin</artifactId> 
+				<version>0.12</version> <configuration> <message>Updated javadocs for ${project.version}</message> 
+				<outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory> 
+				</configuration> <executions> <execution> <phase>site</phase> <goals> <goal>site</goal> 
+				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 
