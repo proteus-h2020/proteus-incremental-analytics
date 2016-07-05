@@ -18,7 +18,7 @@ cd gh-pages
 rm -rf ./*
 cp -R $JAVADOC_DIR/target/site/apidocs/* .
 git add -A . > /dev/null
-git commit -m "[DOCS-$TRAVIS_BUILD_NUMBER] Generate javadoc site (#$TRAVIS_COMMIT_MESSAGE)."
+git commit -m "[DOCS-$TRAVIS_BUILD_NUMBER] Generate javadoc site (#$TRAVIS_COMMIT)."
 git push -fq origin gh-pages
 
 
