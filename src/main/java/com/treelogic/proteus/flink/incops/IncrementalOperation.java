@@ -27,23 +27,58 @@ import com.treelogic.proteus.flink.utils.FieldUtils;
 
 public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 		extends RichWindowFunction<IN, IncResult<OUT>, Tuple, GlobalWindow> {
-
-	protected ValueStateDescriptor<Map<String, OUT>> stateDescriptor;
-
-	protected abstract int numberOfRequiredDataSeries();
-
-	private boolean isStateInitialized;
-
+	
+	/**
+	 * Seriel version UID
+	 */
 	private static final long serialVersionUID = 1L;
 
-	protected IncrementalConfiguration configuration;
-
-	protected abstract void updateWindow(String field, List<DataSerie> dataSeries, OUT status);
-
+	/**
+	 * A common logger
+	 */
 	protected Log log = LogFactory.getLog(this.getClass());
 
+	/**
+	 * Stores the window state. It contains a [key,value] map, where key is the keyed field(s) and value is the result computed
+	 * for the current window
+	 */
+	protected ValueStateDescriptor<Map<String, OUT>> stateDescriptor;
+
+	/**
+	 * Shows if the state is already initialized
+	 */
+	private boolean isStateInitialized;
+	
+	/**
+	 * Contains parameters and configurations given by a user. See @see com.treelogic.proteus.flink.incops.config.IncrementalConfiguration
+	 * for more information
+	 */
+	protected IncrementalConfiguration configuration;
+
+	/**
+	 * It returns the number of required data series to compute a window
+	 * @return Number of required data series to compute a window
+	 */
+	protected abstract int numberOfRequiredDataSeries();
+
+	/**
+	 * When a window is filled, this method is automatically invoked. 
+	 * @param field Keyed field value(s)
+	 * @param dataSeries Lists of  values for the keyed fields.
+	 * @param status Current state for each parameter
+	 */
+	protected abstract void updateWindow(String field, List<DataSerie> dataSeries, OUT status);
+
+	/**
+	 * Due to reflecion and generyc types API restrictions, we need a naive instance of Stateful<?> to dynamically instantiate new states.
+	 */
 	private Stateful<?> stateful;
 
+	/**
+	 * A constructor with a user-given configuration and a naive instance of Stateful<?>
+	 * @param configuration The user-given configuration
+	 * @param stateful A naive instance of the Stateful class
+	 */
 	public IncrementalOperation(IncrementalConfiguration configuration, Stateful<?> stateful) {
 		this.configuration = configuration;
 		this.stateful = stateful;
@@ -53,7 +88,10 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 		}
 		initializeDescriptor();
 	}
-
+	
+	/**
+	 * This method is executed every time a window is filled. For more information, you can see {@link RichWindowFunction#apply(Object, org.apache.flink.streaming.api.windowing.windows.Window, Iterable, Collector)}
+	 */
 	@Override
 	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncResult<OUT>> out)
 			throws Exception {
