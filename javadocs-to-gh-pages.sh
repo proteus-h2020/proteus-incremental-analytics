@@ -14,11 +14,8 @@ git config --global user.email "travis@travis-ci.org"
 git config --global user.name "travis-ci"
 echo -e "Cloning the gh-pages branch...\n"
 
-git clone "https://0xNacho:$GH_TOKEN@github.com/proteus-h2020/proteus-backend.git" --branch=gh-pages gh-pages
+git clone "https://$GH_TOKEN@github.com/proteus-h2020/proteus-backend.git" --branch=gh-pages gh-pages
 cd gh-pages
-git remote rm origin
-git remote add origin "https://0xNacho:$GH_TOKEN@github.com/proteus-h2020/proteus-backend.git"
-
 rm -rf ./*
 cp -R $JAVADOC_DIR/target/site/apidocs/* .
 git add -A .
