@@ -17,6 +17,7 @@ git remote add upstream "https://$GH_TOKEN@github.com/proteus-h2020/proteus-back
 git fetch upstream
 git reset upstream/gh-pages
 cd gh-pages
+ls -an
 rm -rf ./*
 cp -R $JAVADOC_DIR/target/site/apidocs/* .
 git add -A .
