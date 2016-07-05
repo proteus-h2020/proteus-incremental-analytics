@@ -8,6 +8,7 @@ mvn javadoc:javadoc
 echo -e "Publishing javadoc...\n"
 
 cd $HOME
+mkdir docs && cd "$_"
 git init
 git config --global user.email "travis@travis-ci.org"
 git config --global user.name "travis-ci"
@@ -17,7 +18,6 @@ git remote add upstream "https://$GH_TOKEN@github.com/proteus-h2020/proteus-back
 git fetch upstream
 git reset upstream/gh-pages
 cd gh-pages
-ls -an
 rm -rf ./*
 cp -R $JAVADOC_DIR/target/site/apidocs/* .
 git add -A .
