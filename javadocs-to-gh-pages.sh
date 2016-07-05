@@ -1,7 +1,7 @@
 #!/bin/bash
 
 JAVADOC_DIR=$(pwd)
-
+echo "Current path: ${JAVADOC_DIR}"
 #Create javadocs
 mvn javadoc:javadoc
 
