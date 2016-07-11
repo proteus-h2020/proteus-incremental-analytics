@@ -1,16 +1,6 @@
 package com.treelogic.proteus.flink.incops;
 
-import org.apache.flink.api.common.state.ValueState;
-import org.apache.flink.api.common.state.ValueStateDescriptor;
-import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.java.tuple.Tuple;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
-import org.apache.flink.util.Collector;
 
-import java.lang.reflect.Field;
-import java.util.*;
 
 /**
  * Operator that incrementally computes the mode of a variable. State is
@@ -22,83 +12,78 @@ import java.util.*;
  *
  * @param <IN> POJO that contains fields to be analyzed
  */
+/*
 public class IncrementalMode<IN> extends
-    IncrementalOperation<IN, List<Tuple2<Double, Integer>>> {
+    //IncrementalOperation<IN, List<Tuple2<Double, Integer>>> {
+	IncrementalOperation<IN, Map<String, Tuple2<String, List<Tuple2<Double, Integer>>>>> {
 
-    private static final long serialVersionUID = 1;
 
-    private ValueStateDescriptor<Map<Double, Integer>>
-        stateDescriptor;
+	private static final long serialVersionUID = 1;
 
-    private String field = "";
+    private ValueStateDescriptor<Map<String, Map<Double, Integer>>> stateDescriptor;
+
     private int numValues, numDecimals;
+    
+    public IncrementalMode(IncrementalConfiguration configuration) {
+    	this(configuration, 1, 0);
+	}
+    
 
-    /**
-     * numValues = 1 and numDecimals = 0
-     * @param field
-     */
-    public IncrementalMode(String field) {
-        this(field, 1, 0);
-    }
-
-    /**
-     * Main constructor
-     * @param field Name of the field to compute the mode
-     * @param numValues To return the numValues top modes
-     * @param numDecimals Round decimals to numDecimals
-     */
-    public IncrementalMode(String field, int numValues, int numDecimals) {
-        checkField(field);
-
-        this.field = field;
+    public IncrementalMode(IncrementalConfiguration configuration, int numValues, int numDecimals) {
+		super(configuration);
         this.numValues = numValues > 0 ? numValues : 1;
         this.numDecimals = numDecimals >= 0 ? numDecimals : 0;
+	}
 
-        stateDescriptor = new ValueStateDescriptor<>(
-            "mode-last-result",
-            TypeInformation.of(new TypeHint<Map<Double, Integer>>() {}),
-            new HashMap<Double, Integer>());
-    }
 
     public void apply(Tuple key,
                       GlobalWindow window,
                       Iterable<IN> input,
-                      Collector<List<Tuple2<Double, Integer>>> out) throws Exception {
+                      Collector<Map<String, Tuple2<String, List<Tuple2<Double, Integer>>>>> out) throws Exception {
 
-        ValueState<Map<Double, Integer>> state =
-            getRuntimeContext().getState(stateDescriptor);
-
-        List<Tuple2<Double, Integer>> list = new ArrayList<>(numValues);
-        Map<Double, Integer> lastRecord = state.value();
+        ValueState<Map<String, Map<Double, Integer>>> state = getRuntimeContext().getState(stateDescriptor);
+                
+        Map<String, Map<Double, Integer>> modes = state.value();
 
         // Update map
-        for (IN in : input) {
-            Field field = in.getClass().getDeclaredField(this.field);
-            field.setAccessible(true);
-
-            double pow = Math.pow(10, numDecimals);
-            Double i = Math.round((Double) field.get(in) * pow) / pow;
-
-            if (!lastRecord.containsKey(i)) {
-                lastRecord.put(i, 1);
-            } else {
-                lastRecord.put(i, lastRecord.get(i) + 1);
+        for(IN in : input){
+        	for(String fieldName : this.configuration.getFields()){
+        		Double fieldValue = FieldUtils.getValue(in, fieldName);   
+        		double pow = Math.pow(10, numDecimals);
+                Double i = Math.round((Double) fieldValue * pow) / pow;
+                
+                Map<Double, Integer> currentMode = modes.get(fieldName);
+                if(currentMode.containsKey(i)){
+                	currentMode.put(i, 1);
+                }else{
+                	currentMode.put(i, currentMode.get(i) + 1);
+                }
+        	}
+        }
+        state.update(modes);
+        
+        Map<String, Tuple2<String, List<Tuple2<Double, Integer>>>> modeTuples = new HashMap<String, Tuple2<String, List<Tuple2<Double, Integer>>>>();
+        
+        
+        
+        
+        for(Entry<String, Map<Double, Integer>> entry : modes.entrySet()){
+        	
+        	// List<Tuple2<Double, Integer>>> {     	
+        	
+            TreeSet<Tuple2<Double, Integer>> set = toTreeSet(entry.getValue());
+            Iterator<Tuple2<Double, Integer>> it = set.iterator();
+            int i = 0;
+            while (it.hasNext() && i < numValues) {
+                list.add(it.next());
+                i++;
             }
+
+
         }
-
-        // Update state
-        state.update(lastRecord);
-
-        // Find the new modes
-        TreeSet<Tuple2<Double, Integer>> set = toTreeSet(lastRecord);
-        Iterator<Tuple2<Double, Integer>> it = set.iterator();
-        int i = 0;
-
-        while (it.hasNext() && i < numValues) {
-            list.add(it.next());
-            i++;
-        }
-
+        //Map<String, Tuple2<String, Double>>>
+        
+        //component {CLAVE - VALOR}
         // Return the mode element and the value of it's mode
         out.collect(list);
     }
@@ -120,4 +105,14 @@ public class IncrementalMode<IN> extends
 
         return set;
     }
+
+	@Override
+	public void initializeDescriptor() {
+        stateDescriptor = new ValueStateDescriptor<>(
+                "mode-last-result",
+                TypeInformation.of(new TypeHint<Map<String, Map<Double, Integer>>>() {}),
+                new HashMap<String, Map<Double, Integer>>());		
+	}
+	
 }
+**/

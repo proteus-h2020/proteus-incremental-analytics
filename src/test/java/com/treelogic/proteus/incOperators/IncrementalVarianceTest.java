@@ -10,24 +10,35 @@ import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
 
-import com.treelogic.proteus.flink.examples.airquality.AirRegister;
+import com.treelogic.proteus.flink.examples.pojos.AirRegister;
+import com.treelogic.proteus.flink.incops.IncrementalAverage;
 import com.treelogic.proteus.flink.incops.IncrementalVariance;
+import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
+import com.treelogic.proteus.flink.incops.config.OpParameter;
+import com.treelogic.proteus.flink.incops.util.StatefulAverage;
+import com.treelogic.proteus.flink.incops.util.StatefulVariance;
+import com.treelogic.proteus.utils.TestUtils;
 
 public class IncrementalVarianceTest extends DataStreamTestBase {
 
     @Test
     public void simpleTest() {
-        DataStream<Double> stream = this
+		IncrementalConfiguration conf = new IncrementalConfiguration();
+		conf.fields(new OpParameter("o3"));
+    	
+		DataStream<List<Double>> stream = this
             .createTestStream(createDataset())
             .keyBy("station")
             .countWindow(7)
-            .apply(new IncrementalVariance<AirRegister>("o3"));
+            .apply(new IncrementalVariance<AirRegister>(conf))
+            .map(new TestUtils.IncResult2ToDouble<StatefulVariance, Double>());
 
-        ExpectedRecords<Double> expected =
-            new ExpectedRecords<Double>().expectAll(asList(
-                786.6190476190476d, 844.989010989011d));
+		  ExpectedRecords<List<Double>> expected = new ExpectedRecords<List<Double>>()
+				  .expectAll(asList(
+                asList(786.6190476190476d), asList(844.989010989011d)));
 
         assertStream(stream, expected);
+        
     }
 
     private List<AirRegister> createDataset() {

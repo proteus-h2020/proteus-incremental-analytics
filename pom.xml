@@ -1,171 +1,158 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.treelogic.proteus</groupId>
-    <artifactId>proteus</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty-version>9.2.7.v20150116</jetty-version>
-        <org.apache.flink>1.0.1</org.apache.flink>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.treelogic.proteus</groupId>
+	<artifactId>proteus</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-        <compileSource>1.7</compileSource>
-        <testCompileSource>1.8</testCompileSource>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty-version>9.2.7.v20150116</jetty-version>
+		<org.apache.flink>1.0.1</org.apache.flink>
+		<compileSource>1.7</compileSource>
+		<testCompileSource>1.8</testCompileSource>
+	</properties>
 
-        <github.global.server>github-proteus</github.global.server>
-        <github.url>scm:git:ssh://git@github.com:proteus-h2020/proteus-backend.git</github.url>
-    </properties>
+	<!--  Avoid errors on mvn javadoc:javadoc-->
+	<profiles>
+		<profile>
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
+	</profiles>
+	<dependencies>
+		<!-- JUnit, for testing purposes -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<!-- commons logging, for message logging -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!-- Jackson, for JSON serialization -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.3</version>
+		</dependency>
 
-    <scm>
-        <developerConnection>${github.url}</developerConnection>
-    </scm>
+		<!--Websocket API -->
+		<dependency>
+			<groupId>javax.websocket</groupId>
+			<artifactId>javax.websocket-api</artifactId>
+			<version>1.1</version>
+		</dependency>
 
-    <dependencies>
-        <!-- JUnit, for testing purposes -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-        </dependency>
-        <!-- commons logging, for message logging -->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <!-- Jackson, for JSON serialization -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.6.3</version>
-        </dependency>
+		<!-- To run javax.websocket in embedded server -->
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>javax-websocket-server-impl</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+		<!-- To run javax.websocket client -->
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>javax-websocket-client-impl</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
 
-        <!--Websocket API -->
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
-        </dependency>
+		<!-- Flink dependencies -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-java</artifactId>
+			<version>${org.apache.flink}</version>
+		</dependency>
 
-        <!-- To run javax.websocket in embedded server -->
-        <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>javax-websocket-server-impl</artifactId>
-            <version>${jetty-version}</version>
-        </dependency>
-        <!-- To run javax.websocket client -->
-        <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>javax-websocket-client-impl</artifactId>
-            <version>${jetty-version}</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-streaming-java_2.11</artifactId>
+			<version>${org.apache.flink}</version>
+		</dependency>
 
-        <!-- Flink dependencies -->
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-java</artifactId>
-            <version>${org.apache.flink}</version>
-        </dependency>
+		<!-- Flink testing -->
+		<dependency>
+			<groupId>org.flinkspector</groupId>
+			<artifactId>flinkspector-datastream_2.11</artifactId>
+			<version>0.3</version>
+		</dependency>
+	</dependencies>
 
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-streaming-java_2.11</artifactId>
-            <version>${org.apache.flink}</version>
-        </dependency>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.csv</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- Compile source code using java 7 and tests using java 8 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>${compileSource}</source>
+					<target>${compileSource}</target>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-testCompile</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<source>${testCompileSource}</source>
+							<target>${testCompileSource}</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-        <!-- Flink testing -->
-        <dependency>
-            <groupId>org.flinkspector</groupId>
-            <artifactId>flinkspector-datastream_2.11</artifactId>
-            <version>0.3</version>
-        </dependency>
-    </dependencies>
+			<!-- Generate javadocs and upload to Github -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-project-info-reports-plugin</artifactId> 
+				<version>2.9</version> <configuration> <dependencyLocationsEnabled>false</dependencyLocationsEnabled> 
+				</configuration> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<failOnError>false</failOnError>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin> <groupId>com.github.github</groupId> <artifactId>site-maven-plugin</artifactId> 
+				<version>0.12</version> <configuration> <message>Updated javadocs for ${project.version}</message> 
+				<outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory> 
+				</configuration> <executions> <execution> <phase>site</phase> <goals> <goal>site</goal> 
+				</goals> </execution> </executions> </plugin> -->
+		</plugins>
+	</build>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.csv</include>
-                </includes>
-            </resource>
-        </resources>
-        <plugins>
-            <!-- Compile source code using java 7 and tests using java 8 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>${compileSource}</source>
-                    <target>${compileSource}</target>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>process-test-sources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                        <configuration>
-                            <source>${testCompileSource}</source>
-                            <target>${testCompileSource}</target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Generate javadocs and upload to Github -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-                <configuration>
-                    <failOnError>false</failOnError>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>site</phase>
-                        <goals>
-                            <goal>javadoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.12</version>
-                <configuration>
-                    <message>Updated javadocs for ${project.version}</message>
-                    <outputDirectory>${project.reporting.outputDirectory/apidocs}</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>site</phase>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <repositories>
-        <!-- Flink spector repository -->
-        <repository>
-            <id>otto-bintray</id>
-            <url>https://dl.bintray.com/ottogroup/maven</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<!-- Flink spector repository -->
+		<repository>
+			<id>otto-bintray</id>
+			<url>https://dl.bintray.com/ottogroup/maven</url>
+		</repository>
+	</repositories>
 </project>

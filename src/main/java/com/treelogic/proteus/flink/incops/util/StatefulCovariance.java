@@ -2,14 +2,24 @@ package com.treelogic.proteus.flink.incops.util;
 
 import java.util.List;
 
-public class StatefulCovariance {
+import com.treelogic.proteus.flink.incops.states.DataSerie;
+
+public class StatefulCovariance extends Stateful<Double> {
 	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double elemsProcessed = 0;
 	private double sumDeviationProducts = 0;
-	private MeanTuple xMeanTuple = new MeanTuple();
-	private MeanTuple yMeanTuple = new MeanTuple();
+	private StatefulAverage xMeanTuple = new StatefulAverage();
+	private StatefulAverage yMeanTuple = new StatefulAverage();
 
-	public double apply(List<Double> xElems, List<Double> yElems) {
+	public void apply(List<DataSerie> values) {
+		List<Double> xElems = values.get(0).values();
+		List<Double> yElems = values.get(1).values();
+
 		double xMean = mean(xElems), yMean = mean(yElems);
 		double SDP = sumDeviationProducts(xElems, yElems, xMean, yMean);
 
@@ -20,8 +30,8 @@ public class StatefulCovariance {
             updateMeanTuple(xMeanTuple, xElems);
             updateMeanTuple(yMeanTuple, yElems);
         } else {
-            double xMeanDiff = xMean - xMeanTuple.mean();
-            double yMeanDiff = yMean - yMeanTuple.mean();
+            double xMeanDiff = xMean - xMeanTuple.value();
+            double yMeanDiff = yMean - yMeanTuple.value();
 
             sumDeviationProducts = sumDeviationProducts + SDP
             		+ (elemsProcessed * xElems.size() * xMeanDiff * yMeanDiff
@@ -31,13 +41,11 @@ public class StatefulCovariance {
             elemsProcessed += xElems.size();
         }
 		
-		return sumDeviationProducts / (elemsProcessed - 1);
+		this.value =  sumDeviationProducts / (elemsProcessed - 1);
 	}
 	
-	private void updateMeanTuple(MeanTuple mt, List<Double> elems) {
-		for(Double d : elems) {
-			mt.inc(d);
-		}
+	private void updateMeanTuple(StatefulAverage mt, List<Double> elems) {
+		mt.inc(elems);
 	}
 	
 	private double sumDeviationProducts(List<Double> xElems,
@@ -61,4 +69,11 @@ public class StatefulCovariance {
 		
 		return sum / elems.size();
 	}
+
+	@Override
+	public Double value() {
+		return this.value;
+	}
+
+
 }
