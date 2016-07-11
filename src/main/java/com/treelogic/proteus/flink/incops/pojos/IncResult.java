@@ -1,4 +1,4 @@
-package com.treelogic.proteus.flink.incops.states;
+package com.treelogic.proteus.flink.incops.pojos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import com.treelogic.proteus.flink.incops.util.Stateful;
+import com.treelogic.proteus.flink.incops.states.Stateful;
 
 public class IncResult <T extends Stateful<?>>{
 	/**

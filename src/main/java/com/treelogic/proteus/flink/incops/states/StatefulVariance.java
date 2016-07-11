@@ -1,10 +1,10 @@
-package com.treelogic.proteus.flink.incops.util;
+package com.treelogic.proteus.flink.incops.states;
 
 import java.util.List;
 
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import com.treelogic.proteus.flink.incops.states.DataSerie;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
 
 /**
  * Function with state that calculates the variance for a global window and

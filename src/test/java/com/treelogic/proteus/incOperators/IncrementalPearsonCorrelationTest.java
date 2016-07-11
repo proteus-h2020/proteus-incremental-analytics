@@ -14,7 +14,7 @@ import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalPearsonCorrelation;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
 import com.treelogic.proteus.flink.incops.config.OpParameter;
-import com.treelogic.proteus.flink.incops.util.StatefulPearsonCorrelation;
+import com.treelogic.proteus.flink.incops.states.StatefulPearsonCorrelation;
 import com.treelogic.proteus.utils.TestUtils;
 
 public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {

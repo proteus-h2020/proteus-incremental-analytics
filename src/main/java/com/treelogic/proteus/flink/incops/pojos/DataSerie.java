@@ -1,4 +1,4 @@
-package com.treelogic.proteus.flink.incops.states;
+package com.treelogic.proteus.flink.incops.pojos;
 
 import java.io.Serializable;
 import java.util.ArrayList;

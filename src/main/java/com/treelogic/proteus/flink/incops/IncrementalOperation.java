@@ -21,10 +21,10 @@ import org.apache.flink.util.Collector;
 
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
 import com.treelogic.proteus.flink.incops.config.OpParameter;
-import com.treelogic.proteus.flink.incops.states.DataSerie;
-import com.treelogic.proteus.flink.incops.states.IncResult;
-import com.treelogic.proteus.flink.incops.util.Stateful;
-import com.treelogic.proteus.flink.utils.FieldUtils;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
+import com.treelogic.proteus.flink.incops.pojos.IncResult;
+import com.treelogic.proteus.flink.incops.states.Stateful;
+import com.treelogic.proteus.utils.FieldUtils;
 
 public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 		extends RichWindowFunction<IN, IncResult<OUT>, Tuple, GlobalWindow> {

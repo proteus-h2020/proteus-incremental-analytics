@@ -14,7 +14,7 @@ import com.treelogic.proteus.flink.examples.pojos.AirRegister;
 import com.treelogic.proteus.flink.incops.IncrementalAverage;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
 import com.treelogic.proteus.flink.incops.config.OpParameter;
-import com.treelogic.proteus.flink.incops.util.StatefulAverage;
+import com.treelogic.proteus.flink.incops.states.StatefulAverage;
 import com.treelogic.proteus.utils.TestUtils;
 
 public class IncrementalAverageTest extends DataStreamTestBase {

@@ -2,8 +2,8 @@ package com.treelogic.proteus.flink.incops;
 
 import java.util.List;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
-import com.treelogic.proteus.flink.incops.states.DataSerie;
-import com.treelogic.proteus.flink.incops.util.StatefulAverage;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
+import com.treelogic.proteus.flink.incops.states.StatefulAverage;
 
 public class IncrementalAverage<IN> extends IncrementalOperation<IN, StatefulAverage> {
 

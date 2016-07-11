@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import com.treelogic.proteus.flink.incops.states.IncResult;
-import com.treelogic.proteus.flink.incops.util.Stateful;
+import com.treelogic.proteus.flink.incops.pojos.IncResult;
+import com.treelogic.proteus.flink.incops.states.Stateful;
 
 public class TestUtils {
 

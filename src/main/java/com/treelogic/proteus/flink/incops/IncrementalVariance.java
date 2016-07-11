@@ -3,8 +3,8 @@ package com.treelogic.proteus.flink.incops;
 import java.util.List;
 
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
-import com.treelogic.proteus.flink.incops.states.DataSerie;
-import com.treelogic.proteus.flink.incops.util.StatefulVariance;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
+import com.treelogic.proteus.flink.incops.states.StatefulVariance;
 
 /**
  * Incremental variance using the general updating formula described in

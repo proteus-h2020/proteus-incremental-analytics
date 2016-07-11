@@ -1,8 +1,8 @@
-package com.treelogic.proteus.flink.incops.util;
+package com.treelogic.proteus.flink.incops.states;
 
 import java.util.List;
 
-import com.treelogic.proteus.flink.incops.states.DataSerie;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
 
 public class StatefulCovariance extends Stateful<Double> {
 	

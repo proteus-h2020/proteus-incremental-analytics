@@ -1,9 +1,9 @@
-package com.treelogic.proteus.flink.incops.util;
+package com.treelogic.proteus.flink.incops.states;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.treelogic.proteus.flink.incops.states.DataSerie;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
 import com.treelogic.proteus.utils.MathUtils;
 
 /**

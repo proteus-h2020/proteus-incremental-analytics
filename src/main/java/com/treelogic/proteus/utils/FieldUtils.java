@@ -1,4 +1,4 @@
-package com.treelogic.proteus.flink.utils;
+package com.treelogic.proteus.utils;
 
 import java.lang.reflect.Field;
 

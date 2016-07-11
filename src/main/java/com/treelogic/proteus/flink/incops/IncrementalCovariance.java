@@ -2,8 +2,8 @@ package com.treelogic.proteus.flink.incops;
 
 import java.util.List;
 import com.treelogic.proteus.flink.incops.config.IncrementalConfiguration;
-import com.treelogic.proteus.flink.incops.states.DataSerie;
-import com.treelogic.proteus.flink.incops.util.StatefulCovariance;
+import com.treelogic.proteus.flink.incops.pojos.DataSerie;
+import com.treelogic.proteus.flink.incops.states.StatefulCovariance;
 
 /**
  * Incremental covariance using the updating formula described in
