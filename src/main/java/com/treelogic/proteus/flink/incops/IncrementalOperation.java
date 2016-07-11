@@ -1,6 +1,7 @@
 package com.treelogic.proteus.flink.incops;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -160,7 +161,7 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	}
 
 	@SuppressWarnings("unchecked")
-	private void createState() {
+	private void createState() throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		ValueState<Map<String, OUT>> state = getRuntimeContext().getState(stateDescriptor);
 		Map<String, OUT> stateValues = null;
 		try {

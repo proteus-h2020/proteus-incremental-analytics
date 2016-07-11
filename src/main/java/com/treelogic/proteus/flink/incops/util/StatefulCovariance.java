@@ -3,17 +3,21 @@ package com.treelogic.proteus.flink.incops.util;
 import java.util.List;
 
 import com.treelogic.proteus.flink.incops.states.DataSerie;
-import com.treelogic.proteus.utils.MathUtils;
 
 public class StatefulCovariance extends Stateful<Double> {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double elemsProcessed = 0;
 	private double sumDeviationProducts = 0;
 	private StatefulAverage xMeanTuple = new StatefulAverage();
 	private StatefulAverage yMeanTuple = new StatefulAverage();
 
 	public void apply(List<DataSerie> values) {
+		System.out.println("Element processded: " + elemsProcessed);
 		List<Double> xElems = values.get(0).values();
 		List<Double> yElems = values.get(1).values();
 
@@ -42,9 +46,7 @@ public class StatefulCovariance extends Stateful<Double> {
 	}
 	
 	private void updateMeanTuple(StatefulAverage mt, List<Double> elems) {
-		for(Double d : elems) {
-			mt.inc(d);
-		}
+		mt.inc(elems);
 	}
 	
 	private double sumDeviationProducts(List<Double> xElems,

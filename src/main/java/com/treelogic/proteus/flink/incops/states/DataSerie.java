@@ -1,17 +1,32 @@
 package com.treelogic.proteus.flink.incops.states;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DataSerie {
+public class DataSerie implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String fieldName;
-	private List<Double> values;
+	private List<Double> values = new ArrayList<Double>();
 
 	public List<Double> values() {
 		return values;
 	}
 
+	public DataSerie (String fieldName){
+		this.fieldName = fieldName;
+		
+	}
+	
+	public DataSerie(){
+		
+	}
+	
 	public DataSerie values(List<Double> values) {
 		this.values = values;
 		return this;

@@ -1,7 +1,10 @@
 package com.treelogic.proteus.flink.incops.util;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.treelogic.proteus.flink.incops.states.DataSerie;
+import com.treelogic.proteus.utils.MathUtils;
 
 /**
  * Tuple that contains sum and count of elements. Used to compute mean values
@@ -10,48 +13,21 @@ import com.treelogic.proteus.flink.incops.states.DataSerie;
  */
 public class StatefulAverage extends Stateful<Double> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6953929745457825750L;
-	
-	private double sum, count;
 
-	/**
-	 * Sum and count = 0
-	 */
+	private double mean, count;
+
+	private DataSerie serie;
+
 	public StatefulAverage() {
-
+		this.serie = new DataSerie().values(new ArrayList<Double>());
 	}
 
-	public StatefulAverage(double sum, double count) {
+	public StatefulAverage(double mean, double count) {
 		checkCountParameter(count);
 
-		this.sum = sum;
+		this.mean = mean;
 		this.count = count;
-	}
-
-	/**
-	 * Increments sum by value and count by 1. Same as inc(value, 1).
-	 * 
-	 * @param value
-	 */
-	public void inc(double value) {
-		inc(value, 1);
-	}
-
-	/**
-	 * Used to increment both sum and count by the specified values.
-	 * 
-	 * @param sum
-	 * @param count
-	 */
-	private void inc(double sum, int count) {
-		checkCountParameter(count);
-		this.sum += sum;
-		this.count += count;
-    	this.value =  count == 0 ? 0 : sum / count;
-
 	}
 
 	private void checkCountParameter(double count) {
@@ -62,17 +38,34 @@ public class StatefulAverage extends Stateful<Double> {
 
 	@Override
 	public Double value() {
-    	this.value =  count == 0 ? 0 : sum / count;
+		this.value = this.mean;
 		return this.value;
 	}
 
 	@Override
 	public void apply(List<DataSerie> series) {
-		DataSerie serie = series.get(0);
-		for (double number : serie.values()) {
-			inc(number);
-		}
-		this.value = (count == 0 ? 0 : sum / count);
+		this.serie = series.get(0);
+		List<Double> values = serie.values();
+		mean(values);
+
+	}
+
+	private void mean(List<Double> values) {
+		int serieSize = values.size();
+
+		double currentAverage = MathUtils.mean(values);
+		
+		double actualAVG = this.count != 0.0
+				? (((this.mean * this.count) + (currentAverage * serieSize)) / (serieSize + this.count))
+				: currentAverage;
+
+		this.count += serieSize;
+		this.mean = actualAVG;
+	}
+
+	public void inc(List<Double> values) {
+		this.serie.values().addAll(values);
+		mean(this.serie.values());
 	}
 
 }
