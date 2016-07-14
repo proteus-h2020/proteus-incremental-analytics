@@ -9,8 +9,4 @@ env:
 
 after_success:
 - ./javadocs-to-gh-pages.sh
-- deploy:
-  provider: bintray
-  file: "bintray-descriptor.json"
-  user: "0xnacho"
-  key: "EBOCNxXovxPNQ/p4jamhCY8tRtP8x66YqOCjxwRO2Rvg1Mb4ryIYHut2Ogrjw4fWwppRJ2b4unKZUkonqfwf1NVjGTzqwfyDs24T7DRKnjipTVKqTwBPuiwjHOR0k9Lv8iwnDzDH+ttNBSivp/ZIYNgPQZntNnm3Ue9uORCdza+fjse7IEsm5PBehDp9YrlPyMJFd1a7DuVAm8/H5GfIkwmvhEApIwgE+Taup+7AQ1KBIoxMGQ5qOl0ll9NuF3eK8KGQUCz11tMe53j6JksWSCqLDrBunCeQXyNfbj8YcrC2P4h7+TnXNFjubjIQmFBPZuw7ySvb/r5bFtJwyTvSC8DBlCWxtkMSMW2BfC29iTcEXITqizYz3c3fegcxagQul2JTYrm1UWLufK8FTGS9Dqahbtr/1b4osW7NdhQR298UMnI8y9q7iuzOadU8RMZ8F3hqUHC13miEtCTzDuwOEJ1EsgE6omlrktJvs8U7u5HtF+GrgThJZSs6Zkjj94Gnylcnn/Gy4wYIu1/Qb5LuptvVPYUsU6l7N6x7p17y8fa2olGANUk7496jeQlwAp0JlznnwRHLkUG67Yh/9Dv2DxJmB9SPrjRDkCp2+0UZfzOBIMMpU6G/zctZ3UY3/B34jqyNRkkv32dSNIoYMUBi4FcwsgpBZCTCG26prJhx1Ik="
+- test "${TRAVIS_PULL_REQUEST}" == "false" && mvn deploy --settings settings.xml
