@@ -9,7 +9,8 @@ env:
 
 after_success:
 - ./javadocs-to-gh-pages.sh
-- deploy:
+
+deploy:
   provider: bintray
   file: "bintray-descriptor.json"
   user: "0xnacho"
