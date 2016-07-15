@@ -1,26 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.treelogic.proteus</groupId>
-	<artifactId>proteus-backend</artifactId>
-	<version>0.0.1</version>
+	<artifactId>proteus-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>PROTEUS</name>
+	<url>http://proteus-bigdata.com</url>
+	<inceptionYear>2015</inceptionYear>
 
-<distributionManagement>
-    <repository>
-        <id>bintray-proteus-h2020-proteus-backend</id>
-        <name>proteus-h2020-proteus-backend</name>
-        <url>https://api.bintray.com/maven/proteus-h2020/proteus-backend/com.treelogic.proteus/;publish=1</url>
-    </repository>
-</distributionManagement>
-
-
+	<!-- PROTEUS properties -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty-version>9.2.7.v20150116</jetty-version>
-		<org.apache.flink>1.0.1</org.apache.flink>
+		<flink.version>1.0.3</flink.version>
+		<flinkinspector.version>0.3</flinkinspector.version>
+		<websocketapi.version>1.1</websocketapi.version>
+		<jetty.version>9.2.7.v20150116</jetty.version>
+		<junit.version>4.12</junit.version>
+		<commonslogging.version>1.2</commonslogging.version>
 		<compileSource>1.7</compileSource>
 		<testCompileSource>1.8</testCompileSource>
 	</properties>
+	<!-- End of PROTEUS properties -->
+
+
+	<!-- PROTEUS sub-modules -->
+	<modules>
+		<module>proteus-core</module>
+		<module>proteus-examples</module>
+		<module>proteus-visualization</module>
+	</modules>
+	<!-- End of PROTEUS sub-modules -->
+
+	<!-- PROTEUS license -->
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<!-- End of PROTEUS license -->
+
+	<!-- PROTEUS dependencies -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- Module dependencies -->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>proteus-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- End of Module dependencies -->
+
+			<!-- Flink JAVA -->
+			<dependency>
+				<groupId>org.apache.flink</groupId>
+				<artifactId>flink-java</artifactId>
+				<version>${flink.version}</version>
+			</dependency>
+			<!-- Flink JAVA streaming -->
+			<dependency>
+				<groupId>org.apache.flink</groupId>
+				<artifactId>flink-streaming-java_2.11</artifactId>
+				<version>${flink.version}</version>
+			</dependency>
+
+			<!-- Flink testing -->
+			<dependency>
+				<groupId>org.flinkspector</groupId>
+				<artifactId>flinkspector-datastream_2.11</artifactId>
+				<version>${flinkinspector.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+
+			<!--Websocket API -->
+			<dependency>
+				<groupId>javax.websocket</groupId>
+				<artifactId>javax.websocket-api</artifactId>
+				<version>${websocketapi.version}</version>
+			</dependency>
+
+			<!-- To run javax.websocket in embedded server -->
+			<dependency>
+				<groupId>org.eclipse.jetty.websocket</groupId>
+				<artifactId>javax-websocket-server-impl</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<!-- To run javax.websocket client -->
+			<dependency>
+				<groupId>org.eclipse.jetty.websocket</groupId>
+				<artifactId>javax-websocket-client-impl</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+
+			<!-- commons logging, for message logging -->
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>${commonslogging.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<!-- End of PROTEUS dependencies -->
+
+	<!-- PROTEUS Repositories -->
+	<repositories>
+		<!-- Flink inspector repository -->
+		<repository>
+			<id>otto-bintray</id>
+			<url>https://dl.bintray.com/ottogroup/maven</url>
+		</repository>
+	</repositories>
+	<!-- End of PROTEUS Repositories -->
+
 
 	<!-- Avoid errors on mvn javadoc:javadoc -->
 	<profiles>
@@ -34,66 +133,6 @@
 			</properties>
 		</profile>
 	</profiles>
-	<dependencies>
-		<!-- JUnit, for testing purposes -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>
-		<!-- commons logging, for message logging -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<!-- Jackson, for JSON serialization -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.6.3</version>
-		</dependency>
-
-		<!--Websocket API -->
-		<dependency>
-			<groupId>javax.websocket</groupId>
-			<artifactId>javax.websocket-api</artifactId>
-			<version>1.1</version>
-		</dependency>
-
-		<!-- To run javax.websocket in embedded server -->
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>javax-websocket-server-impl</artifactId>
-			<version>${jetty-version}</version>
-		</dependency>
-		<!-- To run javax.websocket client -->
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>javax-websocket-client-impl</artifactId>
-			<version>${jetty-version}</version>
-		</dependency>
-
-		<!-- Flink dependencies -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-java</artifactId>
-			<version>${org.apache.flink}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-streaming-java_2.11</artifactId>
-			<version>${org.apache.flink}</version>
-		</dependency>
-
-		<!-- Flink testing -->
-		<dependency>
-			<groupId>org.flinkspector</groupId>
-			<artifactId>flinkspector-datastream_2.11</artifactId>
-			<version>0.3</version>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<resources>
@@ -111,8 +150,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<source>${compileSource}</source>
-					<target>${compileSource}</target>
+					<source></source>
+					<target>
+						${compileSource}</target>
 				</configuration>
 				<executions>
 					<execution>
@@ -129,10 +169,6 @@
 				</executions>
 			</plugin>
 
-			<!-- Generate javadocs and upload to Github -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-project-info-reports-plugin</artifactId> 
-				<version>2.9</version> <configuration> <dependencyLocationsEnabled>false</dependencyLocationsEnabled> 
-				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -155,15 +191,7 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.2</version>
 			</plugin>
-
 		</plugins>
 	</build>
 
-	<repositories>
-		<!-- Flink inspector repository -->
-		<repository>
-			<id>otto-bintray</id>
-			<url>https://dl.bintray.com/ottogroup/maven</url>
-		</repository>
-	</repositories>
 </project>
