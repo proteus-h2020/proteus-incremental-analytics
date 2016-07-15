@@ -13,4 +13,3 @@ Official website: [PROTEUS H2020](http://www.proteus-bigdata.com/)
 
 ## Documentation
 Check our [Javadoc site](http://proteus-h2020.github.io/proteus-backend/) if you are looking for code documentation, or have a look into [Official PROTEUS Website] (http://www.proteus-bigdata.com/ ) for project documentation.
-
