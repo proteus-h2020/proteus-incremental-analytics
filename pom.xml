@@ -3,15 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.treelogic.proteus</groupId>
 	<artifactId>proteus-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 
-	<distributionManagement>
-		<repository>
-			<id>my-bintray-id</id>
-			<url>https://api.bintray.com/maven/0xnacho/proteus-h2020/proteus-backend;publish=1</url>
-		</repository>
-	</distributionManagement>
-
+<distributionManagement>
+    <repository>
+        <id>bintray-proteus-h2020-proteus-backend</id>
+        <name>proteus-h2020-proteus-backend</name>
+        <url>https://api.bintray.com/maven/proteus-h2020/proteus-backend/com.treelogic.proteus/;publish=1</url>
+    </repository>
+</distributionManagement>
 
 
 	<properties>
