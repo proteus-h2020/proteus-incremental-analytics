@@ -10,6 +10,14 @@
 	<url>http://proteus-bigdata.com</url>
 	<inceptionYear>2015</inceptionYear>
 
+	<scm>
+		<connection>scm:git:https://github.com/proteus-h2020/proteus-backend.git</connection>
+		<developerConnection>scm:git:git@github.com:{proteus-h2020}/proteus-backend.git</developerConnection>
+		<url>https://github.com/proteus-h2020/proteus-backend</url>
+		<tag>HEAD</tag>
+	</scm>
+
+
 	<!-- PROTEUS properties -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -146,6 +154,35 @@
 				<additionalparam>-Xdoclint:none</additionalparam>
 			</properties>
 		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<build>
@@ -195,6 +232,24 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>bintray</id>
+			<url>https://api.bintray.com/maven/0xnacho/proteus-h2020/proteus-backend</url>
+		</repository>
+	</distributionManagement>
+
 
 </project>
