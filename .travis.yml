@@ -10,8 +10,8 @@ env:
 deploy:
   provider: bintray
   file: "bintray-descriptor.json"
-  user: "${env.BINTRAY_USER}"
-  key: "${env.BINTRAY_API_KEY}"
+  user: "${BINTRAY_USER}"
+  key: "${BINTRAY_API_KEY}"
 
 after_success:
 - ./javadocs-to-gh-pages.sh
