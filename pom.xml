@@ -30,6 +30,7 @@
 		<module>proteus-core</module>
 		<module>proteus-examples</module>
 		<module>proteus-visualization</module>
+		<module>proteus-dist</module>
 	</modules>
 	<!-- End of PROTEUS sub-modules -->
 
@@ -55,9 +56,16 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>proteus-visualization</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>proteus-examples</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
 			<!-- End of Module dependencies -->
 
 			<!-- Flink JAVA -->
