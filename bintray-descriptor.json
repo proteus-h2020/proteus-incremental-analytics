@@ -34,7 +34,7 @@
 
     "files":
         [
-        {"includePattern": "*/target/(.*)", "excludePattern": "target/.*.zip$", "uploadPattern": "/$1"}
+        {"includePattern": "./**/target/(.*)", "excludePattern": "./**/target/.*.zip$", "uploadPattern": "/$1"}
         ],
     "publish": true
 }
