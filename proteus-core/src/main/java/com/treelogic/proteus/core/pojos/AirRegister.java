@@ -1,4 +1,4 @@
-package com.treelogic.proteus.examples.pojos;
+package com.treelogic.proteus.core.pojos;
 
 public class AirRegister {
 

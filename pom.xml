@@ -19,8 +19,8 @@
 		<jetty.version>9.2.7.v20150116</jetty.version>
 		<junit.version>4.12</junit.version>
 		<commonslogging.version>1.2</commonslogging.version>
-		<compileSource>1.7</compileSource>
-		<testCompileSource>1.8</testCompileSource>
+		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+		<compileSource.version>1.8</compileSource.version>
 	</properties>
 	<!-- End of PROTEUS properties -->
 
@@ -50,6 +50,12 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>proteus-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>proteus-examples</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<!-- End of Module dependencies -->
@@ -143,55 +149,44 @@
 				</includes>
 			</resource>
 		</resources>
-		<plugins>
-			<!-- Compile source code using java 7 and tests using java 8 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<source></source>
-					<target>
-						${compileSource}</target>
-				</configuration>
-				<executions>
-					<execution>
-						<id>default-testCompile</id>
-						<phase>process-test-sources</phase>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-							<source>${testCompileSource}</source>
-							<target>${testCompileSource}</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+		<pluginManagement>
+			<plugins>
+				<!-- Compile source code using java 7 and tests using java 8 -->
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<source>${compileSource.version}</source>
+						<target>${compileSource.version}</target>
+						<testSource>${compileSource.version}</testSource>
+						<testTarget>${compileSource.version}</testTarget>
+					</configuration>
+				</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<failOnError>false</failOnError>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<failOnError>false</failOnError>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.2</version>
-			</plugin>
-		</plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>

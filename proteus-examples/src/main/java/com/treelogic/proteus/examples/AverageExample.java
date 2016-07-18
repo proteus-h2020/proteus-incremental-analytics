@@ -14,7 +14,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import com.treelogic.proteus.core.incops.statistics.IncrementalAverage;
-import com.treelogic.proteus.examples.pojos.AirRegister;
+import com.treelogic.proteus.core.pojos.AirRegister;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
 
