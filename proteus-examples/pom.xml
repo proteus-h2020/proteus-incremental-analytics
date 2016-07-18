@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.treelogic.proteus</groupId>
-		<artifactId>proteus-parent</artifactId>
+		<artifactId>proteus</artifactId>
 		<version>0.0.1</version>
 	</parent>
 

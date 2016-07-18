@@ -3,20 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.treelogic.proteus</groupId>
-	<artifactId>proteus-parent</artifactId>
+	<artifactId>proteus</artifactId>
 	<version>0.0.1</version>
 	<packaging>pom</packaging>
 	<name>PROTEUS</name>
 	<url>http://proteus-bigdata.com</url>
 	<inceptionYear>2015</inceptionYear>
-
-	<scm>
-		<connection>scm:git:https://github.com/proteus-h2020/proteus-backend.git</connection>
-		<developerConnection>scm:git:git@github.com:{proteus-h2020}/proteus-backend.git</developerConnection>
-		<url>https://github.com/proteus-h2020/proteus-backend</url>
-		<tag>proteus-0.0.1</tag>
-	</scm>
-
 
 	<!-- PROTEUS properties -->
 	<properties>
@@ -45,7 +37,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>bintray</id>
+			<id>bintray-github</id>
 			<url>https://api.bintray.com/maven/0xnacho/proteus-h2020/proteus-backend</url>
 		</repository>
 	</distributionManagement>
@@ -214,11 +206,11 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<artifactId>maven-release-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
-					<useReleaseProfile>false</useReleaseProfile>
-					<releaseProfiles>release</releaseProfiles>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>
