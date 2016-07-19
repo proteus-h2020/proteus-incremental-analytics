@@ -38,7 +38,8 @@
 	<distributionManagement>
 		<repository>
 			<id>bintray-github</id>
-      	<url>https://api.bintray.com/maven/proteus-h2020/proteus/proteus/;publish=1</url>
+      	<url>https://api.bintray.com/maven/proteus-h2020/proteus/proteus-backend/;publish=1;override=1</url>
+      	
 		</repository>
 	</distributionManagement>
 
