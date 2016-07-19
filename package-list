@@ -3,3 +3,7 @@ com.treelogic.proteus.core.incops.statistics
 com.treelogic.proteus.core.pojos
 com.treelogic.proteus.core.states
 com.treelogic.proteus.core.utils
+com.treelogic.proteus.examples
+com.treelogic.proteus.examples.pojos
+com.treelogic.proteus.visualization
+com.treelogic.proteus.visualization.server
