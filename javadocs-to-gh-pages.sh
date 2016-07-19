@@ -3,7 +3,7 @@
 JAVADOC_DIR=$(pwd)
 echo "Current path: ${JAVADOC_DIR}"
 #Create javadocs
-mvn javadoc:javadoc
+mvn javadoc:aggregate
 
 echo -e "Publishing javadoc...\n"
 
@@ -16,7 +16,7 @@ echo -e "Cloning the gh-pages branch...\n"
 git clone "https://$GH_TOKEN@github.com/proteus-h2020/proteus-backend.git" --branch=gh-pages gh-pages
 cd gh-pages
 rm -rf ./*
-cp -R $JAVADOC_DIR/proteus-**/target/site/apidocs/* .
+cp -R $JAVADOC_DIR/target/site/apidocs/* .
 git add -A . > /dev/null
 git commit -m "[DOCS-$TRAVIS_BUILD_NUMBER] Generate javadoc site (#$TRAVIS_COMMIT)."
 git push -fq origin gh-pages
