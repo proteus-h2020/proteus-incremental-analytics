@@ -32,7 +32,7 @@
         {"includePattern": "proteus-dist/target/(.*)", "excludePattern": "proteus-dist/target/.*.zip$", "uploadPattern": "proteus-dist/$1"},
         {"includePattern": "proteus-examples/target/(.*)", "excludePattern": "proteus-examples/target/.*.zip$", "uploadPattern": "proteus-examples/$1"},
         {"includePattern": "proteus-core/target/(.*)", "excludePattern": "proteus-core/target/.*.zip$", "uploadPattern": "proteus-core/$1"},
-        {"includePattern": "proteus-visualization/target/(.*)", "excludePattern": "proteus-visualization/target/.*.zip$", "uploadPattern": "proteus-visualization/$1"},
+        {"includePattern": "proteus-visualization/target/(.*)", "excludePattern": "proteus-visualization/target/.*.zip$", "uploadPattern": "proteus-visualization/$1"}
 
         ],
     "publish": true
