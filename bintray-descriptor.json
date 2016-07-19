@@ -1,12 +1,10 @@
 {
-    /* Bintray package information.
-       In case the package already exists on Bintray, only the name, repo and subject
-       fields are mandatory. */
+
 
     "package": {
-        "name": "proteus-backend", // Bintray package name
-        "repo": "maven", // Bintray repository name
-        "subject": "proteus-h2020", // Bintray subject (user or organization)
+        "name": "proteus-backend",
+        "repo": "maven",
+        "subject": "proteus-h2020",
         "desc": "I was pushed completely automatically",
         "website_url": "www.proteus-bigdata.com",
         "issue_tracker_url": "https://github.com/proteus-h2020/proteus-backend/issues",
@@ -20,9 +18,6 @@
         "attributes": []
     },
 
-    /* Package version information.
-       In case the version already exists on Bintray, only the name fields is mandatory. */
-
     "version": {
         "name": "0.0.1",
         "desc": "This is a version",
@@ -34,7 +29,7 @@
 
     "files":
         [
-        {"includePattern": ".\/**\/target\/(.*)", "excludePattern": "./**/target/.*.zip$", "uploadPattern": "/$1"}
+        {"includePattern": "proteus-dist/target/(.*\\.jar)","uploadPattern": "/$1"}
         ],
     "publish": true
 }
