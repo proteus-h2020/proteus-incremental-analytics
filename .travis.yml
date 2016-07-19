@@ -15,4 +15,5 @@ deploy:
 
 after_success:
 - ./javadocs-to-gh-pages.sh
+- cd proteus-dist
 - ls -an
