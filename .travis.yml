@@ -15,3 +15,4 @@ deploy:
 
 after_success:
 - ./javadocs-to-gh-pages.sh
+- test "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" && mvn deploy --settings settings.xml
