@@ -16,6 +16,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-resources</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
 		</dependency>
@@ -27,6 +31,7 @@
 			<groupId>com.treelogic.proteus</groupId>
 			<artifactId>proteus-core</artifactId>
 		</dependency>
+
 	</dependencies>
 
 	<build>

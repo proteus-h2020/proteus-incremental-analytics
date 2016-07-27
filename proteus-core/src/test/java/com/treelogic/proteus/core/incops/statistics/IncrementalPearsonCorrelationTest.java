@@ -1,15 +1,7 @@
 package com.treelogic.proteus.core.incops.statistics;
-import static java.util.Arrays.asList;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.flinkspector.core.collection.ExpectedRecords;
 import org.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
-
-import com.treelogic.proteus.core.pojos.AirRegister;
 
 public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
 	
@@ -45,7 +37,7 @@ public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
             ));
         assertStream(stream, expected);**/
 	}
-	
+	/**
 	private List<AirRegister> createDataset(int datasetSize) {
         String station = "station";
 
@@ -71,4 +63,5 @@ public class IncrementalPearsonCorrelationTest extends DataStreamTestBase {
         }
         return dataset;
     }
+    **/
 }

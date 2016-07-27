@@ -1,6 +1,5 @@
 package com.treelogic.proteus.visualization;
 
-import static org.junit.Assert.*;
 
 import java.io.IOException;
 

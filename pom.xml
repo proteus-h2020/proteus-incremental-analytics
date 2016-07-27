@@ -18,6 +18,7 @@
 		<websocketapi.version>1.1</websocketapi.version>
 		<jetty.version>9.2.7.v20150116</jetty.version>
 		<junit.version>4.12</junit.version>
+		<logback.version>1.1.7</logback.version>
 		<commonslogging.version>1.2</commonslogging.version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		<compileSource.version>1.8</compileSource.version>
@@ -31,6 +32,7 @@
 		<module>proteus-examples</module>
 		<module>proteus-visualization</module>
 		<module>proteus-dist</module>
+		<module>proteus-resources</module>
 	</modules>
 	<!-- End of PROTEUS sub-modules -->
 
@@ -38,8 +40,8 @@
 	<distributionManagement>
 		<repository>
 			<id>bintray-github</id>
-      	<url>https://api.bintray.com/maven/proteus-h2020/proteus/proteus-backend/;publish=1;override=1</url>
-      	
+			<url>https://api.bintray.com/maven/proteus-h2020/proteus/proteus-backend/;publish=1;override=1</url>
+
 		</repository>
 	</distributionManagement>
 
@@ -73,6 +75,12 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>proteus-examples</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>proteus-resources</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -124,15 +132,17 @@
 				<version>${jetty.version}</version>
 			</dependency>
 
-			<!-- commons logging, for message logging -->
+
 			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>${commonslogging.version}</version>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<!-- End of PROTEUS dependencies -->
+
+
 
 	<!-- PROTEUS Repositories -->
 	<repositories>
@@ -203,16 +213,16 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5.2</version>
 				</plugin>
-				
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<skip>false</skip>
-				</configuration>
-			</plugin>
-			
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<skip>false</skip>
+					</configuration>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 		<plugins>

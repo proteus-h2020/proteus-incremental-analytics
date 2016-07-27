@@ -15,19 +15,19 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpoint;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebsocketServer {
 
 	/**
 	 * Common logger
 	 */
-	private static Log logger = LogFactory.getLog(WebsocketServer.class);
+	protected static Logger log = LoggerFactory.getLogger(WebsocketServer.class);
 
 	/**
 	 * Server instance
@@ -93,7 +93,7 @@ public class WebsocketServer {
 					server.stop();
 				}
 			} catch (Exception e) {
-				logger.error(e);
+				log.error(e.toString());
 			}
 		}
 	}
@@ -128,7 +128,7 @@ public class WebsocketServer {
 		/**
 		 * Common logger
 		 */
-		protected Log logger = LogFactory.getLog(this.getClass());
+		protected static Logger log = LoggerFactory.getLogger(WebsocketEndpoint.class);
 
 		/**
 		 * Synchronized list of connected clients to websocket server
@@ -146,7 +146,7 @@ public class WebsocketServer {
 		@OnMessage
 		public void onMessage(String message, Session session)
 				throws IOException {
-			logger.info("New message: " + message + " from client: " + session);
+			log.info("New message: " + message + " from client: " + session);
 			synchronized (clients) {
 				for (Session client : clients) {
 					if (!client.equals(session)) {
@@ -162,7 +162,7 @@ public class WebsocketServer {
 		 */
 		@OnOpen
 		public void onOpen(Session session) {
-			logger.info("New connection to websocket endpoint: " + session);
+			log.info("New connection to websocket endpoint: " + session);
 			clients.add(session);
 		}
 
@@ -174,7 +174,7 @@ public class WebsocketServer {
 		 */
 		@OnClose
 		public void onClose(Session session, CloseReason reason) {
-			logger.info("Disconnected client, reason "+ reason +" session:" + session);
+			log.info("Disconnected client, reason "+ reason +" session:" + session);
 			clients.remove(session);
 		}
 
