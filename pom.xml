@@ -33,6 +33,7 @@
 		<module>proteus-visualization</module>
 		<module>proteus-dist</module>
 		<module>proteus-resources</module>
+		<module>proteus-connectors</module>
 	</modules>
 	<!-- End of PROTEUS sub-modules -->
 
