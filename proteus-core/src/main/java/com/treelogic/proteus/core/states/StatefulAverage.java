@@ -11,7 +11,7 @@ import com.treelogic.proteus.core.utils.MathUtils;
  * associatively.
  *
  */
-public class StatefulAverage extends Stateful<Double> {
+public class StatefulAverage extends Stateful {
 
 	private static final long serialVersionUID = 6953929745457825750L;
 

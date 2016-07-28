@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.treelogic.proteus.core.pojos.DataSerie;
 
-public class StatefulPearsonCorrelation extends Stateful<Double>{
+public class StatefulPearsonCorrelation extends Stateful{
 
 	private static final long serialVersionUID = 1L;
 	private StatefulVariance xVariance = new StatefulVariance(),

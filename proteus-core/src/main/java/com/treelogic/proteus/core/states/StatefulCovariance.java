@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.treelogic.proteus.core.pojos.DataSerie;
 
-public class StatefulCovariance extends Stateful<Double> {
+public class StatefulCovariance extends Stateful {
 	
 	/**
 	 * 

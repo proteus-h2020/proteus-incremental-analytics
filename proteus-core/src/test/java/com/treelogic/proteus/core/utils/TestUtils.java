@@ -38,15 +38,15 @@ public class TestUtils {
 		}
 	}
 	
-	public static class IncResult2ToDouble<T extends Stateful<S>, S> implements MapFunction<IncResult<T>, List<S>> {
+	public static class IncResult2ToDouble<S> implements MapFunction<IncResult, List<Double>> {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public List<S> map(IncResult<T> r) throws Exception {
-			List<S> results = new ArrayList<S>();
-			for(Entry<String, Tuple2<String, T>> e : r.entrySet()){
-				results.add(e.getValue().f1.value());
+		public List<Double> map(IncResult r) throws Exception {
+			List<Double> results = new ArrayList<Double>();
+			for(Entry<String, Tuple2<String, Stateful>> e : r.entrySet()){
+				results.add((Double)e.getValue().f1.value());
 			}
 			return results;
 		}

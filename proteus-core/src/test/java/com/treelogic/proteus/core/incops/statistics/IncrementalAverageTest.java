@@ -29,7 +29,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .keyBy("station")
 	            .countWindow(7)
 	            .apply(new IncrementalAverage<AirRegister>(conf))
-	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage, Double>());
+	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage>());
 		
         ExpectedRecords<List<Double>> expected = new ExpectedRecords<List<Double>>()
             	.expect(asList(30.428571428571427d));
@@ -47,7 +47,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .keyBy("station")
 	            .countWindow(7)
 	            .apply(new IncrementalAverage<AirRegister>(conf))
-	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage, Double>());
+	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage>());
 		
 
         ExpectedRecords<List<Double>> expected =

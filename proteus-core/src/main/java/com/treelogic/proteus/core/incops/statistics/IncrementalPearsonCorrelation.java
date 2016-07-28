@@ -3,6 +3,7 @@ package com.treelogic.proteus.core.incops.statistics;
 import java.util.List;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.pojos.DataSerie;
+import com.treelogic.proteus.core.states.Stateful;
 import com.treelogic.proteus.core.states.StatefulPearsonCorrelation;
 
 /**
@@ -10,8 +11,7 @@ import com.treelogic.proteus.core.states.StatefulPearsonCorrelation;
  *
  * @param <IN>
  */
-public class IncrementalPearsonCorrelation<IN>
-		extends IncrementalOperation<IN, StatefulPearsonCorrelation> {
+public class IncrementalPearsonCorrelation<IN> extends IncrementalOperation<IN> {
 
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class IncrementalPearsonCorrelation<IN>
 	}
 
 	@Override
-	protected void updateWindow(String field, List<DataSerie> dataSeries, StatefulPearsonCorrelation status) {
+	protected void updateWindow(String field, List<DataSerie> dataSeries, Stateful status) {
 		status.apply(dataSeries);
 	}
 

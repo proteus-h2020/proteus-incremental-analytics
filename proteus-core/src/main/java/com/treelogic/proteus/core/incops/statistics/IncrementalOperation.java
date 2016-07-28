@@ -26,8 +26,8 @@ import com.treelogic.proteus.core.pojos.IncResult;
 import com.treelogic.proteus.core.states.Stateful;
 import com.treelogic.proteus.core.utils.FieldUtils;
 
-public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
-		extends RichWindowFunction<IN, IncResult<OUT>, Tuple, GlobalWindow> {
+public abstract class IncrementalOperation<IN>
+		extends RichWindowFunction<IN, IncResult, Tuple, GlobalWindow> {
 
 	/**
 	 * Seriel version UID
@@ -43,7 +43,7 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * Stores the window state. It contains a [key,value] map, where key is the
 	 * keyed field(s) and value is the result computed for the current window
 	 */
-	protected ValueStateDescriptor<Map<String, OUT>> stateDescriptor;
+	protected ValueStateDescriptor<Map<String, Stateful>> stateDescriptor;
 
 	/**
 	 * Contains parameters and configurations given by a user. See @see
@@ -69,13 +69,13 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * @param status
 	 *            Current state for each parameter
 	 */
-	protected abstract void updateWindow(String field, List<DataSerie> dataSeries, OUT status);
+	protected abstract void updateWindow(String field, List<DataSerie> dataSeries, Stateful status);
 
 	/**
 	 * Due to reflecion and generyc types API restrictions, we need a naive
 	 * instance of Stateful<?> to dynamically instantiate new states.
 	 */
-	private Stateful<?> stateful;
+	private Stateful stateful;
 
 	/**
 	 * A constructor with a user-given configuration and a naive instance of
@@ -86,7 +86,7 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * @param stateful
 	 *            A naive instance of the Stateful class
 	 */
-	public IncrementalOperation(IncrementalConfiguration configuration, Stateful<?> stateful) {
+	public IncrementalOperation(IncrementalConfiguration configuration, Stateful stateful) {
 		this.configuration = configuration;
 		this.stateful = stateful;
 
@@ -102,13 +102,13 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * {@link RichWindowFunction#apply(Object, org.apache.flink.streaming.api.windowing.windows.Window, Iterable, Collector)}
 	 */
 	@Override
-	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncResult<OUT>> out)
+	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncResult> out)
 			throws Exception {
 		
 		OpParameter[] parameters = this.configuration.getFields();
-		ValueState<Map<String, OUT>> state = getRuntimeContext().getState(stateDescriptor);
+		ValueState<Map<String, Stateful>> state = getRuntimeContext().getState(stateDescriptor);
 
-		Map<String, OUT> stateValues = state.value();
+		Map<String, Stateful> stateValues = state.value();
 		
 		
 		if(stateValues.isEmpty()){
@@ -130,9 +130,9 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 		applyOperation(values, stateValues);
 		state.update(stateValues);
 
-		IncResult<OUT> result = new IncResult<OUT>();
+		IncResult result = new IncResult();
 
-		for (Entry<String, OUT> entry : stateValues.entrySet()) {
+		for (Entry<String, Stateful> entry : stateValues.entrySet()) {
 			result.put(entry.getKey(), key.toString(), entry.getValue());
 		}
 
@@ -145,7 +145,7 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * @param values List of window values
 	 * @param states List of key states
 	 */
-	protected void applyOperation(MultiValueMap values, Map<String, OUT> states) {
+	protected void applyOperation(MultiValueMap values, Map<String, Stateful> states) {
 		OpParameter[] parameters = this.configuration.getFields();
 		List<DataSerie> dataSeries = new ArrayList<DataSerie>();
 
@@ -156,7 +156,7 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 				DataSerie serie = new DataSerie(field).values((List<Double>) values.get(field));
 				dataSeries.add(serie);
 			}
-			OUT state = states.get(parameter.getComposedName());
+			Stateful state = states.get(parameter.getComposedName());
 
 			if (assertWindowRestriction(dataSeries.size())) {
 				updateWindow(parameter.getComposedName(), dataSeries, state);
@@ -181,8 +181,8 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * Initialize the state descriptor. Automatically invoked in the constructor of this class.
 	 */
 	private void initializeDescriptor() {
-		stateDescriptor = new ValueStateDescriptor<>("last-result", new TypeHint<Map<String, OUT>>() {
-		}.getTypeInfo(), new HashMap<String, OUT>());
+		stateDescriptor = new ValueStateDescriptor<>("last-result", new TypeHint<Map<String, Stateful>>() {
+		}.getTypeInfo(), new HashMap<String, Stateful>());
 	}
 
 	/**
@@ -195,12 +195,12 @@ public abstract class IncrementalOperation<IN, OUT extends Stateful<Double>>
 	 * @throws SecurityException
 	 */
 	@SuppressWarnings("unchecked")
-	private void initializeKeyedState(Map<String, OUT> stateValues,ValueState<Map<String, OUT>> state)
+	private void initializeKeyedState(Map<String, Stateful> stateValues,ValueState<Map<String, Stateful>> state)
 			throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 
 		OpParameter[] opParameters = this.configuration.getFields();
 
-		Class<OUT> clazz = (Class<OUT>) stateful.getClass();
+		Class<Stateful> clazz = (Class<Stateful>) stateful.getClass();
 		for (OpParameter field : opParameters) {
 			try {
 				stateValues.put(field.getComposedName(), clazz.newInstance());

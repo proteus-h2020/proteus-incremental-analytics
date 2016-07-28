@@ -27,7 +27,7 @@ public class IncrementalVarianceTest extends DataStreamTestBase {
             .keyBy("station")
             .countWindow(7)
             .apply(new IncrementalVariance<AirRegister>(conf))
-            .map(new TestUtils.IncResult2ToDouble<StatefulVariance, Double>());
+            .map(new TestUtils.IncResult2ToDouble<StatefulVariance>());
 
 		  ExpectedRecords<List<Double>> expected = new ExpectedRecords<List<Double>>()
 				  .expectAll(asList(

@@ -15,7 +15,7 @@ import com.treelogic.proteus.core.pojos.DataSerie;
  * http://i.stanford.edu/pub/cstr/reports/cs/tr/79/773/CS-TR-79-773.pdf
  *
  */
-public class StatefulVariance extends Stateful<Double> {
+public class StatefulVariance extends Stateful {
 
 	/**
 	 * 

@@ -19,5 +19,9 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-core</artifactId>
+		</dependency>
 	</dependencies>
 </project>
