@@ -1,10 +1,9 @@
-package com.treelogic.proteus.core.states;
+package com.treelogic.proteus.resources.states;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.treelogic.proteus.core.pojos.DataSerie;
-
+import com.treelogic.proteus.resources.model.DataSerie;
 
 public abstract class Stateful implements Serializable {
 

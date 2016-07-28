@@ -1,16 +1,12 @@
-package com.treelogic.proteus.core.pojos;
+package com.treelogic.proteus.resources.model;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.flink.api.java.tuple.Tuple2;
+import com.treelogic.proteus.resources.states.Stateful;
 
-import com.treelogic.proteus.core.states.Stateful;
-
-
-//public class IncResult <T extends Stateful<?>>{
 public class IncResult{
 
 	/**
@@ -19,20 +15,20 @@ public class IncResult{
 	 * Tuple2-T = result
 
 	 */
-	private Map<String, Tuple2<String, Stateful>> results = new HashMap<String, Tuple2<String, Stateful>>();
+	private Map<String, Pair<String, Stateful>> results = new HashMap<String, Pair<String, Stateful>>();
 	
 	public  Set<String> keys(){
 		return results.keySet();
 	}
 	
 	public void put(String entryKey, String key, Stateful value){
-		results.put(entryKey, new Tuple2<String, Stateful>(key, value));
+		results.put(entryKey, new Pair<String, Stateful>(key, value));
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder message = new StringBuilder();
-		for(Entry<String, Tuple2<String, Stateful>> e : results.entrySet()){
+		for(Entry<String, Pair<String, Stateful>> e : results.entrySet()){
 			message.append(e.getKey())
 					.append("   ->   ")
 					.append(e.getValue().f0)
@@ -43,7 +39,7 @@ public class IncResult{
 		return message.toString();
 	}
 	
-	public Set<Entry<String, Tuple2<String, Stateful>>> entrySet(){
+	public Set<Entry<String, Pair<String, Stateful>>> entrySet(){
 		return results.entrySet();
 	}
 	

@@ -8,8 +8,10 @@ import java.util.Map.Entry;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import com.treelogic.proteus.core.pojos.IncResult;
-import com.treelogic.proteus.core.states.Stateful;
+import com.treelogic.proteus.resources.model.IncResult;
+import com.treelogic.proteus.resources.model.Pair;
+import com.treelogic.proteus.resources.states.Stateful;
+
 
 public class TestUtils {
 
@@ -45,7 +47,7 @@ public class TestUtils {
 		@Override
 		public List<Double> map(IncResult r) throws Exception {
 			List<Double> results = new ArrayList<Double>();
-			for(Entry<String, Tuple2<String, Stateful>> e : r.entrySet()){
+			for(Entry<String, Pair<String, Stateful>> e : r.entrySet()){
 				results.add((Double)e.getValue().f1.value());
 			}
 			return results;

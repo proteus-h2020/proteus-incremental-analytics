@@ -1,8 +1,9 @@
-package com.treelogic.proteus.core.states;
+package com.treelogic.proteus.resources.states;
 
 import java.util.List;
 
-import com.treelogic.proteus.core.pojos.DataSerie;
+import com.treelogic.proteus.resources.model.DataSerie;
+
 
 public class StatefulPearsonCorrelation extends Stateful{
 

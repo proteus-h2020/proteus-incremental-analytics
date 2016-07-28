@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
-import com.treelogic.proteus.core.states.StatefulAverage;
 import com.treelogic.proteus.core.utils.TestUtils;
-import com.treelogic.proteus.core.pojos.AirRegister;
+import com.treelogic.proteus.resources.model.AirRegister;
+import com.treelogic.proteus.resources.states.StatefulAverage;
 
 
 

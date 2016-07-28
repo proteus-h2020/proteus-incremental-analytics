@@ -16,7 +16,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
 import com.treelogic.proteus.core.incops.statistics.IncrementalVariance;
-import com.treelogic.proteus.core.pojos.AirRegister;
+import com.treelogic.proteus.resources.model.AirRegister;
 
 public class VarianceExample {
 	public static final int WINDOW_SIZE = 2;

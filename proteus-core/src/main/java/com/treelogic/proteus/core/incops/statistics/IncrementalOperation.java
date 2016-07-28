@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
-import com.treelogic.proteus.core.pojos.DataSerie;
-import com.treelogic.proteus.core.pojos.IncResult;
-import com.treelogic.proteus.core.states.Stateful;
-import com.treelogic.proteus.core.utils.FieldUtils;
+import com.treelogic.proteus.resources.model.DataSerie;
+import com.treelogic.proteus.resources.model.IncResult;
+import com.treelogic.proteus.resources.states.Stateful;
+import com.treelogic.proteus.resources.utils.FieldUtils;
 
 public abstract class IncrementalOperation<IN>
 		extends RichWindowFunction<IN, IncResult, Tuple, GlobalWindow> {

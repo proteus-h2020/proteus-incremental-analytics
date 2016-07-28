@@ -1,4 +1,4 @@
-package com.treelogic.proteus.core.pojos;
+package com.treelogic.proteus.resources.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

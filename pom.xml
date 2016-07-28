@@ -89,6 +89,12 @@
 				<version>${project.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>proteus-dist</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
 			<!-- End of Module dependencies -->
 
 			<!-- Flink JAVA -->

@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.treelogic.proteus</groupId>
-			<artifactId>proteus-core</artifactId>
+			<artifactId>proteus-resources</artifactId>
 		</dependency>
 	</dependencies>
 </project>

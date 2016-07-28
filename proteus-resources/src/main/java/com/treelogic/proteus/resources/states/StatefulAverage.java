@@ -1,10 +1,10 @@
-package com.treelogic.proteus.core.states;
+package com.treelogic.proteus.resources.states;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.treelogic.proteus.core.pojos.DataSerie;
-import com.treelogic.proteus.core.utils.MathUtils;
+import com.treelogic.proteus.resources.model.DataSerie;
+import com.treelogic.proteus.resources.utils.MathUtils;
 
 /**
  * Tuple that contains sum and count of elements. Used to compute mean values

@@ -1,4 +1,4 @@
-package com.treelogic.proteus.core.utils;
+package com.treelogic.proteus.resources.utils;
 
 import java.util.Arrays;
 import java.util.List;

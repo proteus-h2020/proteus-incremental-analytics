@@ -1,10 +1,11 @@
-package com.treelogic.proteus.core.states;
+package com.treelogic.proteus.resources.states;
 
 import java.util.List;
 
-import org.apache.flink.api.java.tuple.Tuple2;
+import com.treelogic.proteus.resources.model.DataSerie;
+import com.treelogic.proteus.resources.model.Pair;
 
-import com.treelogic.proteus.core.pojos.DataSerie;
+
 /**
  * Function with state that calculates the variance for a global window and
  * keeps it's state so the operator can be used by incremental streams. <br>
@@ -31,7 +32,7 @@ public class StatefulVariance extends Stateful {
 
 	public void apply(DataSerie serie){
 		List<Double> values = serie.values();
-		Tuple2<Double, Double> t = youngsCrammerFormula(values);
+		Pair<Double, Double> t = youngsCrammerFormula(values);
 		int elemsSize = values.size();
 
 		windowCount++;
@@ -90,7 +91,7 @@ public class StatefulVariance extends Stateful {
 	 * @param elems
 	 * @return S and T
 	 */
-	private Tuple2<Double, Double> youngsCrammerFormula(List<Double> elems) {
+	private Pair<Double, Double> youngsCrammerFormula(List<Double> elems) {
 		double T = elems.get(0);
 		double S = 0;
 
@@ -99,6 +100,6 @@ public class StatefulVariance extends Stateful {
 			S = S + (Math.pow(((i + 1) * elems.get(i)) - T, 2) / ((double) i * (i + 1)));
 		}
 
-		return new Tuple2<>(S, T);
+		return new Pair<>(S, T);
 	}
 }
