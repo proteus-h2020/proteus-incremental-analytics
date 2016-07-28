@@ -19,7 +19,7 @@
 		<jetty.version>9.2.7.v20150116</jetty.version>
 		<junit.version>4.12</junit.version>
 		<logback.version>1.1.7</logback.version>
-		<commonslogging.version>1.2</commonslogging.version>
+		<log4j-over-slf4j.version>1.7.21</log4j-over-slf4j.version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		<compileSource.version>1.8</compileSource.version>
 	</properties>
@@ -37,12 +37,10 @@
 	</modules>
 	<!-- End of PROTEUS sub-modules -->
 
-
 	<distributionManagement>
 		<repository>
 			<id>bintray-github</id>
 			<url>https://api.bintray.com/maven/proteus-h2020/proteus/proteus-backend/;publish=1;override=1</url>
-
 		</repository>
 	</distributionManagement>
 
@@ -78,10 +76,16 @@
 				<artifactId>proteus-examples</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>proteus-resources</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>proteus-connectors</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -92,12 +96,32 @@
 				<groupId>org.apache.flink</groupId>
 				<artifactId>flink-java</artifactId>
 				<version>${flink.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>*</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<!-- Flink JAVA streaming -->
 			<dependency>
 				<groupId>org.apache.flink</groupId>
 				<artifactId>flink-streaming-java_2.11</artifactId>
 				<version>${flink.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>*</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- Flink testing -->
@@ -105,12 +129,14 @@
 				<groupId>org.flinkspector</groupId>
 				<artifactId>flinkspector-datastream_2.11</artifactId>
 				<version>${flinkinspector.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<!--Websocket API -->
@@ -133,12 +159,32 @@
 				<version>${jetty.version}</version>
 			</dependency>
 
-
+			<!-- Logging dependencies -->
+			<!-- Add the two required logback dependencies -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>${logback.version}</version>
 			</dependency>
+
+			<!-- Add the log4j -> sfl4j (-> logback) bridge into the classpath Hadoop 
+				is logging to log4j! -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${log4j-over-slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${log4j-over-slf4j.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<!-- End of PROTEUS dependencies -->

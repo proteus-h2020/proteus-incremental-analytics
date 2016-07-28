@@ -17,6 +17,14 @@
 		</dependency>
 		<dependency>
 			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-connectors</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-resources</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
 			<artifactId>proteus-visualization</artifactId>
 		</dependency>
 		<dependency>

@@ -23,6 +23,11 @@ public class AverageExample {
 	public static final String OUTPUT = "./OUTPUT";
 
 	public static void main(String[] args) throws Exception {
+		
+	
+		
+		
+		
 		final StreamExecutionEnvironment streamingEnv = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		List<PojoField> fields = new LinkedList<>();
@@ -53,8 +58,8 @@ public class AverageExample {
 		stream
 			.keyBy("station")		
 			.countWindow(WINDOW_SIZE)
-			.apply(new IncrementalAverage<AirRegister>(configuration))
-			.print();
+			.apply(new IncrementalAverage<AirRegister>(configuration));
+			//.print();
 
 		streamingEnv.execute("AirRegisters");
 	}

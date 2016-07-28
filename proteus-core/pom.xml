@@ -10,7 +10,6 @@
 	<artifactId>proteus-core</artifactId>
 	<name>proteus-core</name>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>com.treelogic.proteus</groupId>
@@ -29,7 +28,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-
 	</dependencies>
 
 	<build>
