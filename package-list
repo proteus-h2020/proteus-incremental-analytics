@@ -6,5 +6,4 @@ com.treelogic.proteus.examples
 com.treelogic.proteus.resources.model
 com.treelogic.proteus.resources.states
 com.treelogic.proteus.resources.utils
-com.treelogic.proteus.visualization
 com.treelogic.proteus.visualization.server
