@@ -15,6 +15,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-resources</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>

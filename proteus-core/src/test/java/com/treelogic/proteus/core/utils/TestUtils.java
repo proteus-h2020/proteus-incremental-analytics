@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import com.treelogic.proteus.resources.model.IncResult;
-import com.treelogic.proteus.resources.model.Pair;
+import com.treelogic.proteus.resources.model.IncrementalWindowResult;
 import com.treelogic.proteus.resources.states.Stateful;
 
 
@@ -40,15 +38,16 @@ public class TestUtils {
 		}
 	}
 	
-	public static class IncResult2ToDouble<S> implements MapFunction<IncResult, List<Double>> {
+	public static class IncResult2ToDouble<S> implements MapFunction<IncrementalWindowResult, List<Double>> {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public List<Double> map(IncResult r) throws Exception {
+		public List<Double> map(IncrementalWindowResult r) throws Exception {
 			List<Double> results = new ArrayList<Double>();
-			for(Entry<String, Pair<String, Stateful>> e : r.entrySet()){
-				results.add((Double)e.getValue().f1.value());
+			
+			for(Entry<String, Stateful> entry : r.values().entrySet()){
+				results.add(entry.getValue().value());
 			}
 			return results;
 		}

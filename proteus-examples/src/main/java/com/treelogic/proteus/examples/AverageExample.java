@@ -23,11 +23,6 @@ public class AverageExample {
 	public static final String OUTPUT = "./OUTPUT";
 
 	public static void main(String[] args) throws Exception {
-		
-	
-		
-		
-		
 		final StreamExecutionEnvironment streamingEnv = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		List<PojoField> fields = new LinkedList<>();

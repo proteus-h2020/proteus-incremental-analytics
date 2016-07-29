@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -22,12 +21,13 @@ import org.slf4j.LoggerFactory;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
 import com.treelogic.proteus.resources.model.DataSerie;
-import com.treelogic.proteus.resources.model.IncResult;
+import com.treelogic.proteus.resources.model.IncrementalWindowResult;
+import com.treelogic.proteus.resources.model.IncrementalWindowValue;
 import com.treelogic.proteus.resources.states.Stateful;
 import com.treelogic.proteus.resources.utils.FieldUtils;
 
 public abstract class IncrementalOperation<IN>
-		extends RichWindowFunction<IN, IncResult, Tuple, GlobalWindow> {
+		extends RichWindowFunction<IN, IncrementalWindowResult, Tuple, GlobalWindow> {
 
 	/**
 	 * Seriel version UID
@@ -102,20 +102,19 @@ public abstract class IncrementalOperation<IN>
 	 * {@link RichWindowFunction#apply(Object, org.apache.flink.streaming.api.windowing.windows.Window, Iterable, Collector)}
 	 */
 	@Override
-	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncResult> out)
+	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncrementalWindowResult> out)
 			throws Exception {
-		
+
 		OpParameter[] parameters = this.configuration.getFields();
 		ValueState<Map<String, Stateful>> state = getRuntimeContext().getState(stateDescriptor);
 
 		Map<String, Stateful> stateValues = state.value();
-		
-		
-		if(stateValues.isEmpty()){
+
+		if (stateValues.isEmpty()) {
 			initializeKeyedState(stateValues, state);
 		}
 
-		MultiValueMap values = new MultiValueMap();
+		IncrementalWindowValue values = new IncrementalWindowValue(key.toString());
 
 		// Loop values & fields
 		for (IN in : input) {
@@ -126,33 +125,34 @@ public abstract class IncrementalOperation<IN>
 				}
 			}
 		}
-
 		applyOperation(values, stateValues);
 		state.update(stateValues);
 
-		IncResult result = new IncResult();
+		IncrementalWindowResult result = new IncrementalWindowResult(key.toString());
 
 		for (Entry<String, Stateful> entry : stateValues.entrySet()) {
-			result.put(entry.getKey(), key.toString(), entry.getValue());
+			result.put(entry.getKey(), entry.getValue());
 		}
 
 		out.collect(result);
-
 	}
-	
+
 	/**
-	 * Apply operation, given a list of keyed values (KEY - VALUE) and a set of states to match with.
-	 * @param values List of window values
-	 * @param states List of key states
+	 * Apply operation, given a list of keyed values (KEY - VALUE) and a set of
+	 * states to match with.
+	 * 
+	 * @param values
+	 *            List of window values
+	 * @param states
+	 *            List of key states
 	 */
-	protected void applyOperation(MultiValueMap values, Map<String, Stateful> states) {
+	protected void applyOperation(IncrementalWindowValue values, Map<String, Stateful> states) {
 		OpParameter[] parameters = this.configuration.getFields();
 		List<DataSerie> dataSeries = new ArrayList<DataSerie>();
 
 		for (OpParameter parameter : parameters) {
 			dataSeries.clear();
 			for (String field : parameter.getFields()) {
-				@SuppressWarnings("unchecked")
 				DataSerie serie = new DataSerie(field).values((List<Double>) values.get(field));
 				dataSeries.add(serie);
 			}
@@ -163,10 +163,12 @@ public abstract class IncrementalOperation<IN>
 			}
 		}
 	}
-	
+
 	/**
 	 * Check if operation can be applied given a number of data series.
-	 * @param series Number of data series
+	 * 
+	 * @param series
+	 *            Number of data series
 	 * @return True if operation can be applied
 	 */
 	private boolean assertWindowRestriction(int dataSeries) {
@@ -178,7 +180,8 @@ public abstract class IncrementalOperation<IN>
 	}
 
 	/**
-	 * Initialize the state descriptor. Automatically invoked in the constructor of this class.
+	 * Initialize the state descriptor. Automatically invoked in the constructor
+	 * of this class.
 	 */
 	private void initializeDescriptor() {
 		stateDescriptor = new ValueStateDescriptor<>("last-result", new TypeHint<Map<String, Stateful>>() {
@@ -186,16 +189,20 @@ public abstract class IncrementalOperation<IN>
 	}
 
 	/**
-	 * Initialize a new state for the current key. Given the keys specified by user, it creates a new state for each of them.
-	 * @param stateValues Current state values
-	 * @param state State of this window
+	 * Initialize a new state for the current key. Given the keys specified by
+	 * user, it creates a new state for each of them.
+	 * 
+	 * @param stateValues
+	 *            Current state values
+	 * @param state
+	 *            State of this window
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 */
 	@SuppressWarnings("unchecked")
-	private void initializeKeyedState(Map<String, Stateful> stateValues,ValueState<Map<String, Stateful>> state)
+	private void initializeKeyedState(Map<String, Stateful> stateValues, ValueState<Map<String, Stateful>> state)
 			throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 
 		OpParameter[] opParameters = this.configuration.getFields();

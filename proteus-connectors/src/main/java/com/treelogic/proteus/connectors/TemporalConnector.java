@@ -1,20 +1,16 @@
 package com.treelogic.proteus.connectors;
 
-import com.treelogic.proteus.resources.model.IncResult;
+import com.treelogic.proteus.resources.model.IncrementalWindowValue;
 
 public class TemporalConnector extends DefaultConnector {
 
-	private IncResult data;
+	private IncrementalWindowValue data;
 	
-
-	public TemporalConnector(IncResult data){
+	public TemporalConnector(IncrementalWindowValue data){
 		this.data = data;		
 	}
 	
 	public void apply(){
 		log.debug(data.toString());
 	}
-	
-	
-
 }
