@@ -2,10 +2,10 @@ package com.treelogic.proteus.core.sinks;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.treelogic.proteus.resources.model.IncrementalWindowValue;
+import com.treelogic.proteus.resources.model.IncrementalWindowResult;
 
 
-public class ProteusConnectorSink extends RichSinkFunction<IncrementalWindowValue>{
+public class ProteusConnectorSink extends RichSinkFunction<IncrementalWindowResult>{
 
 	/**
 	 * Default generated serial version UID
@@ -19,8 +19,9 @@ public class ProteusConnectorSink extends RichSinkFunction<IncrementalWindowValu
 	
 
 	@Override
-	public void invoke(IncrementalWindowValue data) throws Exception {
+	public void invoke(IncrementalWindowResult data) throws Exception {
 		StringBuilder message = new StringBuilder();
+		log.info("Data: " + data);
 		//log.info("\n----Invoking Sink ----\n");
 	/**	for(Entry<String, Pair<String, Double>> e : data.entrySet()){
 			message.append(e.getKey())
