@@ -20,6 +20,10 @@
 			<artifactId>proteus-connectors</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-visualization</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
 		</dependency>

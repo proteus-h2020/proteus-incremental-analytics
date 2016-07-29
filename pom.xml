@@ -21,6 +21,7 @@
 		<logback.version>1.1.7</logback.version>
 		<log4j-over-slf4j.version>1.7.21</log4j-over-slf4j.version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+		<jackson.mapperasl.version>1.9.13</jackson.mapperasl.version>
 		<compileSource.version>1.8</compileSource.version>
 	</properties>
 	<!-- End of PROTEUS properties -->
@@ -189,6 +190,12 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>log4j-over-slf4j</artifactId>
 				<version>${log4j-over-slf4j.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>${jackson.mapperasl.version}</version>
 			</dependency>
 
 		</dependencies>

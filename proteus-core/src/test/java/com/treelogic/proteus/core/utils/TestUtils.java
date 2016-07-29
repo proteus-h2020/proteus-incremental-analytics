@@ -38,12 +38,12 @@ public class TestUtils {
 		}
 	}
 	
-	public static class IncResult2ToDouble<S> implements MapFunction<IncrementalWindowResult, List<Double>> {
+	public static class IncResult2ToDouble<S> implements MapFunction<IncrementalWindowResult<?>, List<Double>> {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public List<Double> map(IncrementalWindowResult r) throws Exception {
+		public List<Double> map(IncrementalWindowResult<?> r) throws Exception {
 			List<Double> results = new ArrayList<Double>();
 			
 			for(Entry<String, Stateful> entry : r.values().entrySet()){

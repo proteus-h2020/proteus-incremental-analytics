@@ -23,7 +23,8 @@ public class WebsocketClient {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	public WebsocketClient(String stringUri) throws DeploymentException, IOException{//ws://localhost:8080/events/
+	public WebsocketClient(String stringUri) throws DeploymentException, IOException{
+		//ws://localhost:8080/events/
 		URI uri = URI.create(stringUri);
 		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 		this.session = container.connectToServer(WebsocketServer.WebsocketEndpoint.class,uri);

@@ -12,13 +12,14 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import com.treelogic.proteus.core.incops.statistics.IncrementalAverage;
-import com.treelogic.proteus.core.sinks.ProteusConnectorSink;
+import com.treelogic.proteus.core.sinks.WebsocketSink;
 import com.treelogic.proteus.resources.model.AirRegister;
+import com.treelogic.proteus.connectors.TemporalConnector;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
 
 public class AverageExampleWithConnector {
-	public static final int WINDOW_SIZE = 2;
+	public static final int WINDOW_SIZE = 200000;
 
 	public static final String FILE = "/home/local/TREELOGIC/ignacio.g.fernandez/workspace/csvgenerator/1gb.csv";
 	public static final String OUTPUT = "./OUTPUT";
@@ -56,7 +57,7 @@ public class AverageExampleWithConnector {
 			.keyBy("station")		
 			.countWindow(WINDOW_SIZE)
 			.apply(new IncrementalAverage<AirRegister>(configuration))
-			.addSink(new ProteusConnectorSink());
+			.addSink(new WebsocketSink(new TemporalConnector("date")));
 
 		streamingEnv.execute("AirRegisters");
 	}

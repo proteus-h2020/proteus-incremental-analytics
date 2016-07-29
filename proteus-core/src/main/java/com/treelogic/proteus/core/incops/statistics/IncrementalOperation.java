@@ -27,7 +27,7 @@ import com.treelogic.proteus.resources.states.Stateful;
 import com.treelogic.proteus.resources.utils.FieldUtils;
 
 public abstract class IncrementalOperation<IN>
-		extends RichWindowFunction<IN, IncrementalWindowResult, Tuple, GlobalWindow> {
+		extends RichWindowFunction<IN, IncrementalWindowResult<?>, Tuple, GlobalWindow> {
 
 	/**
 	 * Seriel version UID
@@ -102,7 +102,7 @@ public abstract class IncrementalOperation<IN>
 	 * {@link RichWindowFunction#apply(Object, org.apache.flink.streaming.api.windowing.windows.Window, Iterable, Collector)}
 	 */
 	@Override
-	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncrementalWindowResult> out)
+	public void apply(Tuple key, GlobalWindow window, Iterable<IN> input, Collector<IncrementalWindowResult<?>> out)
 			throws Exception {
 
 		OpParameter[] parameters = this.configuration.getFields();
@@ -116,7 +116,8 @@ public abstract class IncrementalOperation<IN>
 
 		IncrementalWindowValue values = new IncrementalWindowValue(key.toString());
 
-		// Loop values & fields
+		// Loop values & fields. Save the last register.
+		IN lastRecord = null;
 		for (IN in : input) {
 			for (OpParameter parameter : parameters) {
 				for (String field : parameter.getFields()) {
@@ -124,11 +125,12 @@ public abstract class IncrementalOperation<IN>
 					values.put(field, value);
 				}
 			}
+			lastRecord = in;
 		}
 		applyOperation(values, stateValues);
 		state.update(stateValues);
 
-		IncrementalWindowResult result = new IncrementalWindowResult(key.toString());
+		IncrementalWindowResult<IN> result = new IncrementalWindowResult<IN>(key.toString(), lastRecord);
 
 		for (Entry<String, Stateful> entry : stateValues.entrySet()) {
 			result.put(entry.getKey(), entry.getValue());

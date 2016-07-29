@@ -5,14 +5,16 @@ import java.util.Map;
 
 import com.treelogic.proteus.resources.states.Stateful;
 
-public class IncrementalWindowResult {
+public class IncrementalWindowResult<T> {
 
 	private Map<String, Stateful> values = new HashMap<String, Stateful>();
 
 	private String windowKey;
+	private T lastWindowRecord;
 
-	public IncrementalWindowResult(String windowKey) {
+	public IncrementalWindowResult(String windowKey, T lastWindowRecord) {
 		this.windowKey = windowKey;
+		this.lastWindowRecord = lastWindowRecord;
 	}
 
 	public void put(String key, Stateful state){
@@ -25,6 +27,9 @@ public class IncrementalWindowResult {
 	
 	public String getWindowKey(){
 		return windowKey;
+	}
+	public T getLastWindowRecord(){
+		return lastWindowRecord;
 	}
 	
 }

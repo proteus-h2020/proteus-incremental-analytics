@@ -39,18 +39,18 @@ public class StatefulVariance extends Stateful {
 
 		if (windowCount == 1) {
 			// First window
-			S1 = t.f0;
-			T1 = t.f1;
+			S1 = t.key;
+			T1 = t.value;
 
-			this.value = t.f0 / (elemsSize - 1);
+			this.value = t.key / (elemsSize - 1);
 		} else {
 			// Subsequent windows, general variance update formula 2.1
 			double m = (windowCount - 1) * elemsSize, n = elemsSize;
 
-			double S12 = generalUpdatingFormula(m, n, S1, t.f0, T1, t.f1);
+			double S12 = generalUpdatingFormula(m, n, S1, t.key, T1, t.value);
 
 			S1 = S12;
-			T1 = T1 + t.f1;
+			T1 = T1 + t.value;
 
 			this.value = S12 / (m + n - 1);
 		}
