@@ -13,7 +13,8 @@ public class ConnectorJsonStrategy implements ConnectorOutputStrategy, Serializa
 	public String output(Object t) {
 		if (t != null) {
 			org.json.JSONObject jsonObject = new org.json.JSONObject(t);
-			return jsonObject.toString();
+			;
+			return jsonObject.get("data").toString();
 		} else {
 			throw new IllegalStateException(
 					"Cannot convert to JSON the result of this connector. The connector outcome is null");
