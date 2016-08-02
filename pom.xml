@@ -104,6 +104,12 @@
 				<artifactId>flink-java</artifactId>
 				<version>${flink.version}</version>
 				<exclusions>
+				<!-- Avoid servlet-api error (https://github.com/proteus-h2020/proteus-backend/issues/12). Flink uses servlet-api 2.5, and this 
+				version does not include the getServletContext() method, which is used by the proteus websocket API -->
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>servlet-api</artifactId>
+					</exclusion>
 					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>*</artifactId>
@@ -121,6 +127,10 @@
 				<version>${flink.version}</version>
 				<exclusions>
 					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>servlet-api</artifactId>
+					</exclusion>
+					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>*</artifactId>
 					</exclusion>
@@ -137,6 +147,12 @@
 				<artifactId>flinkspector-datastream_2.11</artifactId>
 				<version>${flinkinspector.version}</version>
 				<scope>test</scope>
+				<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>

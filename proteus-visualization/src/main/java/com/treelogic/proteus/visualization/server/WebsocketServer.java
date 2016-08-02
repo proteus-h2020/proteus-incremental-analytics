@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -177,6 +178,12 @@ public class WebsocketServer {
 			log.info("Disconnected client, reason "+ reason +" session:" + session);
 			clients.remove(session);
 		}
+		
+		@OnError
+	    public void onWebSocketError(Throwable cause){
+	        cause.printStackTrace(System.err);
+	    }
+
 
 	}
 
