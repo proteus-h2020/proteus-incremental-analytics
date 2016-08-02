@@ -3,12 +3,11 @@ package com.treelogic.proteus.connectors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
+import com.treelogic.proteus.connectors.outcomes.ConnectorData;
 import com.treelogic.proteus.connectors.outcomes.ConnectorJsonStrategy;
 import com.treelogic.proteus.connectors.outcomes.ConnectorOutcome;
 import com.treelogic.proteus.connectors.outcomes.ConnectorOutputStrategy;
 import com.treelogic.proteus.resources.model.IncrementalWindowResult;
-import com.treelogic.proteus.resources.model.Pair;
 import com.treelogic.proteus.resources.states.Stateful;
 import com.treelogic.proteus.resources.utils.FieldUtils;
 
@@ -46,15 +45,31 @@ public class TemporalConnector extends ProteusConnector {
 			e.printStackTrace();
 		}
 
-		ConnectorOutcome result = new ConnectorOutcome(windowKey);
-		List<Pair<String, Double>> pairs = new ArrayList<Pair<String, Double>>();
+		//ConnectorOutcome result = new ConnectorOutcome(windowKey);
+		ConnectorOutcome result = new ConnectorOutcome();
+
+		List<ConnectorData> data = new ArrayList<ConnectorData>();
+		result.setData(data);
+		
+		for(Entry<String, Stateful> entry : windowData.values().entrySet()){
+			ConnectorData d = new ConnectorData(entry.getKey());
+			List<Point> points = new ArrayList<Point>();
+			points.add(new Point(lastRecordTemporalField, entry.getValue().value()));
+			d.setValues(points);
+			data.add(d);
+		}
+		
+		/**
+		List<Point> pairs = new ArrayList<Point>();
 		for (Entry<String, Stateful> entry : windowData.values().entrySet()) {
-			Pair<String, Double> pair = new Pair<String, Double>();
-			pair.key = entry.getKey();
-			pair.value = entry.getValue().value();
-			pairs.add(pair);
+			Point point = new Point();
+			point.setX(entry.getKey());
+			point.setY(entry.getValue().value());
+			pairs.add(point);
 		}
 		result.setValues(pairs);
+		this.connectorOutcome = result;
+		**/
 		this.connectorOutcome = result;
 		return this;
 	}

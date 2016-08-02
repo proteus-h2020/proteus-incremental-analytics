@@ -135,6 +135,8 @@ public abstract class IncrementalOperation<IN>
 		for (Entry<String, Stateful> entry : stateValues.entrySet()) {
 			result.put(entry.getKey(), entry.getValue());
 		}
+		
+		Thread.sleep(1000);
 
 		out.collect(result);
 	}
