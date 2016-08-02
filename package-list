@@ -1,4 +1,5 @@
 com.treelogic.proteus.connectors
+com.treelogic.proteus.connectors.outcomes
 com.treelogic.proteus.core.configuration
 com.treelogic.proteus.core.incops.statistics
 com.treelogic.proteus.core.sinks
