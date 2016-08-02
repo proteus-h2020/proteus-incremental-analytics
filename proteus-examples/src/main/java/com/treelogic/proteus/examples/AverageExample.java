@@ -53,8 +53,8 @@ public class AverageExample {
 		stream
 			.keyBy("station")		
 			.countWindow(WINDOW_SIZE)
-			.apply(new IncrementalAverage<AirRegister>(configuration));
-			//.print();
+			.apply(new IncrementalAverage<AirRegister>(configuration))
+			.print();
 
 		streamingEnv.execute("AirRegisters");
 	}

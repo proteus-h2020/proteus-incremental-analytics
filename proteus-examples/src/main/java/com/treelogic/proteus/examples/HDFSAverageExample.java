@@ -14,7 +14,9 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import com.treelogic.proteus.core.incops.statistics.IncrementalAverage;
+import com.treelogic.proteus.core.sinks.WebsocketSink;
 import com.treelogic.proteus.resources.model.AirRegister;
+import com.treelogic.proteus.connectors.TemporalConnector;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
 
@@ -49,7 +51,7 @@ public class HDFSAverageExample {
 		// new OpParameter("pm10")
 		);
 		stream.keyBy("station").countWindow(WINDOW_SIZE).apply(new IncrementalAverage<AirRegister>(configuration))
-		.print();
+		.addSink(new WebsocketSink(new TemporalConnector("date")));
 
 		streamingEnv.execute("AirRegisters");
 	}

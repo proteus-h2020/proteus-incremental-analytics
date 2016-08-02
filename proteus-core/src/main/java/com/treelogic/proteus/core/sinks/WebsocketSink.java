@@ -22,10 +22,13 @@ public class WebsocketSink extends RichSinkFunction<IncrementalWindowResult<?>> 
 	 */
 	private static Logger log = LoggerFactory.getLogger(WebsocketSink.class);
 
+	/**
+	 * This connector is used to transform the window outcomes into a readable format for the visualization library.
+	 */
 	private ProteusConnector connector;
 
 	/**
-	 * When JVM loads this class, static block is executed implicitily
+	 * When JVM loads this class, this static block is  implicitily executed 
 	 */
 	static {
 		log.debug("Initializing websocket server");
@@ -38,8 +41,11 @@ public class WebsocketSink extends RichSinkFunction<IncrementalWindowResult<?>> 
 
 	@Override
 	public void invoke(IncrementalWindowResult<?> data) throws Exception {
-		connector.apply(data);
-		String json = connector.toJson();
+		String json = connector.apply(data).output();
+		send(json);
+	}
+
+	private void send(String json) {
 		WebsocketServer.sendAll(json);
 		log.debug("Sending message to websocket: " + json);
 	}
@@ -52,7 +58,7 @@ public class WebsocketSink extends RichSinkFunction<IncrementalWindowResult<?>> 
 	@Override
 	public void close() throws Exception {
 		log.debug("Closing Sink" + this);
-		if(WebsocketServer.isRunning()){
+		if (WebsocketServer.isRunning()) {
 			WebsocketServer.stop();
 		}
 	}
