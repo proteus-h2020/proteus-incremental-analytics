@@ -2,6 +2,7 @@
 bin/
 tmp/
 *.tmp
+*.iml
 *.bak
 *.swp
 *~.nib
