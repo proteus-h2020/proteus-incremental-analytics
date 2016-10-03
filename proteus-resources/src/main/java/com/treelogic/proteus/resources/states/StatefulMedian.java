@@ -3,8 +3,10 @@ package com.treelogic.proteus.resources.states;
 import com.treelogic.proteus.resources.model.DataSerie;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.*;
+
+import com.treelogic.proteus.resources.utils.Item;
+import com.treelogic.proteus.resources.utils.Quantile;
 
 
 /**
@@ -314,42 +316,3 @@ public class StatefulMedian extends Stateful {
 
 }
 
-class Item implements Serializable{
-	public final Double value;
-	public int g;
-	public final int delta;
-
-	public Item(Double value, int lower_delta, int delta) {
-		this.value = value;
-		this.g = lower_delta;
-		this.delta = delta;
-	}
-
-	@Override
-	public String toString() {
-		//System.out.println("%d, %d, %d" + value +  g + delta);
-		return String.format("%f, %d, %d", value, g, delta);
-	}
-
-}
-
-class Quantile implements Serializable{
-
-	public final double quantile;
-	public final double error;
-	public final double u;
-	public final double v;
-
-	public Quantile(double quantile, double error) {
-		this.quantile = quantile;
-		this.error = error;
-		u = 2.0 * error / (1.0 - quantile);
-		v = 2.0 * error / quantile;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Q{q=%.3f, eps=%.3f})", quantile, error);
-	}
-
-}
