@@ -21,7 +21,7 @@ import com.treelogic.proteus.resources.model.AirRegister;
 public class VarianceExample {
 	public static final int WINDOW_SIZE = 2;
 
-	public static final String FILE = "./src/main/resources/datasets/smallDataset.csv";
+	public static final String FILE = "./proteus-examples/src/main/resources/datasets/smallDataset.csv";
 	public static final String OUTPUT = "./OUTPUT";
 
     public static void main(String[] args) throws Exception {

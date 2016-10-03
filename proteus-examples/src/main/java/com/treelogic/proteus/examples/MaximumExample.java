@@ -24,7 +24,7 @@ public class MaximumExample {
 
         public static final int WINDOW_SIZE = 2;
 
-        public static final String FILE = "/home/pablo.mesa/Escritorio/GitRepositorys/proteus-backend/proteus-examples/src/main/resources/datasets/smallDataset.csv";
+        public static final String FILE = "./proteus-examples/src/main/resources/datasets/smallDataset.csv";
         public static final String OUTPUT = "./OUTPUT";
 
         public static void main(String[] args) throws Exception {
