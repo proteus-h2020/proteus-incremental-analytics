@@ -50,9 +50,7 @@ public class MedianExample {
             IncrementalConfiguration configuration = new IncrementalConfiguration();
 
             configuration.fields(
-                    new OpParameter("o3"),
-                    new OpParameter("co"),
-                    new OpParameter("so2")
+                    new OpParameter("co")//, new OpParameter("03"), new OpParameter("so2")
             );
 
             stream

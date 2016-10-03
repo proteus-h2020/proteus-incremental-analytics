@@ -1,7 +1,6 @@
 package com.treelogic.proteus.resources.states;
 
 import com.treelogic.proteus.resources.model.DataSerie;
-import com.treelogic.proteus.resources.utils.MathUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,17 +8,18 @@ import java.util.*;
 
 
 /**
- * CKSM Algorithm
+ *  CKSM Algorithm
  *
- * Effective Computation of Biased Quantiles over Data Streams
- * http://www.cs.rutgers.edu/~muthu/bquant.pdf
+ *  Effective Computation of Biased Quantiles over Data Streams
+ *  http://www.cs.rutgers.edu/~muthu/bquant.pdf
  *
  */
+
 public class StatefulMedian extends Stateful {
 
 	private static final long serialVersionUID = 6953929745457825750L;
 
-	private double mean, count;
+	private double median, count;
 
     // Tracking Incremental Compression
     private int compressIdx = 0;
@@ -28,7 +28,7 @@ public class StatefulMedian extends Stateful {
     LinkedList<Item> sample;
 
     // Buffers de los elementos que llegan insertados en batch
-    Double[] buffer = new Double[500];
+    Double[] buffer = new Double[1];
     int bufferCount = 0;
 
     //Array de Quantiles que queremos calcular con los errores deseados
@@ -51,12 +51,50 @@ public class StatefulMedian extends Stateful {
         // buffer
 	}
 
-	public StatefulMedian(double mean, double count) {
+	public StatefulMedian(double median, double count) {
 		checkCountParameter(count);
 
-		this.mean = mean;
+		this.median = median;
 		this.count = count;
 	}
+
+    @Override
+    public void apply(List<DataSerie> series) {
+        this.serie = series.get(0);
+        List<Double> values = serie.values();
+
+        for ( Double valor : values){
+            insert(valor);
+        }
+
+    }
+
+    /*
+    * 30/09 - Wrong buffer initialization
+    * 03/09 - Fixed
+    *
+    *
+    */
+
+    public void insert(Double v) {
+
+        System.out.println(" ** V **"  + v);
+
+        buffer[bufferCount] = v;
+        bufferCount++;
+        // printBuffer();
+
+        if (bufferCount == buffer.length) {
+            insertBatch();
+            compress();
+        }
+
+        try {
+            median = query(0.50);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	private void checkCountParameter(double count) {
 		if (count < 1) {
@@ -128,19 +166,7 @@ public class StatefulMedian extends Stateful {
      * @param v
      */
 
-    /////// Defect
-    // Wrong buffer initialization
-    public void insert(Double v) {
 
-        buffer[bufferCount] = v;
-        bufferCount++;
-        // printBuffer();
-
-        if (bufferCount == buffer.length) {
-            insertBatch();
-            compress();
-        }
-    }
 
 
     // MEDIANA - INSERTO
@@ -279,51 +305,12 @@ public class StatefulMedian extends Stateful {
     // Operacion Media
 	@Override
 	public Double value() {
-		this.value = this.mean;
+		this.value = this.median;
 		return this.value;
 	}
 
 
 
-	// Operacion Media
-	@Override
-	public void apply(List<DataSerie> series) {
-		this.serie = series.get(0);
-		List<Double> values = serie.values();
-
-        for ( Double valor : values){
-            insert(valor);
-        }
-
-	}
-
-
-		/*
-
-	// Operacion Media
-	private void mean(List<Double> values) {
-		int serieSize = values.size();
-
-		double currentAverage = MathUtils.mean(values);
-		
-		double actualAVG = this.count != 0.0
-				? (((this.mean * this.count) + (currentAverage * serieSize)) / (serieSize + this.count))
-				: currentAverage;
-
-		this.count += serieSize;
-		this.mean = actualAVG;
-	}
-
-	*/
-
-		/*
-
-	// Operacion Media
-	public void inc(List<Double> values) {
-		this.serie.values().addAll(values);
-		mean(this.serie.values());
-	}
-	*/
 
 }
 
