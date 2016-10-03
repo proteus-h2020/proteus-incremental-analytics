@@ -80,8 +80,6 @@ public class StatefulMedian extends Stateful {
 
     public void insert(Double v) {
 
-        System.out.println(" ** V **"  + v);
-
         buffer[bufferCount] = v;
         bufferCount++;
         // printBuffer();
