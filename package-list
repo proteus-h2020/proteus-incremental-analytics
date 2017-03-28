@@ -1,10 +1,9 @@
-com.treelogic.proteus.connectors
-com.treelogic.proteus.connectors.outcomes
 com.treelogic.proteus.core.configuration
 com.treelogic.proteus.core.incops.statistics
-com.treelogic.proteus.core.sinks
+com.treelogic.proteus.core.pojos
+com.treelogic.proteus.core.states
+com.treelogic.proteus.core.utils
 com.treelogic.proteus.examples
-com.treelogic.proteus.resources.model
-com.treelogic.proteus.resources.states
-com.treelogic.proteus.resources.utils
+com.treelogic.proteus.examples.pojos
+com.treelogic.proteus.visualization
 com.treelogic.proteus.visualization.server
