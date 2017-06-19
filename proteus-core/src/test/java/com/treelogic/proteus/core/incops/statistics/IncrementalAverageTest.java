@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
-import com.treelogic.proteus.core.states.StatefulAverage;
 import com.treelogic.proteus.core.utils.TestUtils;
-import com.treelogic.proteus.core.pojos.AirRegister;
+import com.treelogic.proteus.resources.model.AirRegister;
+import com.treelogic.proteus.resources.states.StatefulAverage;
 
 
 
@@ -29,7 +29,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .keyBy("station")
 	            .countWindow(7)
 	            .apply(new IncrementalAverage<AirRegister>(conf))
-	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage, Double>());
+	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage>());
 		
         ExpectedRecords<List<Double>> expected = new ExpectedRecords<List<Double>>()
             	.expect(asList(30.428571428571427d));
@@ -47,7 +47,7 @@ public class IncrementalAverageTest extends DataStreamTestBase {
 	            .keyBy("station")
 	            .countWindow(7)
 	            .apply(new IncrementalAverage<AirRegister>(conf))
-	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage, Double>());
+	            .map(new TestUtils.IncResult2ToDouble<StatefulAverage>());
 		
 
         ExpectedRecords<List<Double>> expected =

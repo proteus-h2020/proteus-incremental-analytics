@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
-import com.treelogic.proteus.core.pojos.AirRegister;
-import com.treelogic.proteus.core.states.StatefulCovariance;
 import com.treelogic.proteus.core.utils.TestUtils;
+import com.treelogic.proteus.resources.model.AirRegister;
+import com.treelogic.proteus.resources.states.StatefulCovariance;
 
 public class IncrementalCovarianceTest extends DataStreamTestBase {
 
@@ -29,7 +29,7 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
             .keyBy("station")
             .countWindow(7)
             .apply(new IncrementalCovariance<AirRegister>(conf))
-            .map(new TestUtils.IncResult2ToDouble<StatefulCovariance, Double>());
+            .map(new TestUtils.IncResult2ToDouble<StatefulCovariance>());
 
 
         ExpectedRecords<List<Double>> expected =
@@ -48,7 +48,7 @@ public class IncrementalCovarianceTest extends DataStreamTestBase {
             .keyBy("station")
             .countWindow(7)
             .apply(new IncrementalCovariance<AirRegister>(conf))
-            .map(new TestUtils.IncResult2ToDouble<StatefulCovariance, Double>());
+            .map(new TestUtils.IncResult2ToDouble<StatefulCovariance>());
 
         ExpectedRecords<List<Double>> expected =
             new ExpectedRecords<List<Double>>().expectAll(asList(

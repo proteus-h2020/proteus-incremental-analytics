@@ -10,17 +10,31 @@
 	<artifactId>proteus-core</artifactId>
 	<name>proteus-core</name>
 
-
 	<dependencies>
+		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-resources</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-connectors</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.treelogic.proteus</groupId>
+			<artifactId>proteus-visualization</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-streaming-java_2.11</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.flinkspector</groupId>
 			<artifactId>flinkspector-datastream_2.11</artifactId>
 		</dependency>
-
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -42,6 +56,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>

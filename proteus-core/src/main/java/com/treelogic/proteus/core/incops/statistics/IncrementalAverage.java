@@ -2,10 +2,11 @@ package com.treelogic.proteus.core.incops.statistics;
 
 import java.util.List;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
-import com.treelogic.proteus.core.pojos.DataSerie;
-import com.treelogic.proteus.core.states.StatefulAverage;
+import com.treelogic.proteus.resources.model.DataSerie;
+import com.treelogic.proteus.resources.states.Stateful;
+import com.treelogic.proteus.resources.states.StatefulAverage;
 
-public class IncrementalAverage<IN> extends IncrementalOperation<IN, StatefulAverage> {
+public class IncrementalAverage<IN> extends IncrementalOperation<IN> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,7 +15,7 @@ public class IncrementalAverage<IN> extends IncrementalOperation<IN, StatefulAve
 	}
 
 	@Override
-	protected void updateWindow(String field, List<DataSerie> dataSeries, StatefulAverage status) {
+	protected void updateWindow(String field, List<DataSerie> dataSeries, Stateful status) {
 		status.apply(dataSeries);
 	}
 

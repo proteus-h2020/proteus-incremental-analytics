@@ -3,7 +3,6 @@ package com.treelogic.proteus.examples;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.io.PojoCsvInputFormat;
@@ -12,16 +11,15 @@ import org.apache.flink.api.java.typeutils.PojoTypeInfo;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-
 import com.treelogic.proteus.core.incops.statistics.IncrementalAverage;
-import com.treelogic.proteus.core.pojos.AirRegister;
+import com.treelogic.proteus.resources.model.AirRegister;
 import com.treelogic.proteus.core.configuration.IncrementalConfiguration;
 import com.treelogic.proteus.core.configuration.OpParameter;
 
 public class AverageExample {
 	public static final int WINDOW_SIZE = 2;
 
-	public static final String FILE = "./src/main/resources/datasets/smallDataset.csv";
+	public static final String FILE = "/home/local/TREELOGIC/ignacio.g.fernandez/workspace/csvgenerator/1gb.csv";
 	public static final String OUTPUT = "./OUTPUT";
 
 	public static void main(String[] args) throws Exception {
@@ -45,11 +43,18 @@ public class AverageExample {
 		DataStream<AirRegister> stream = streamingEnv.createInput(format, typeInfo);
 
 		IncrementalConfiguration configuration = new IncrementalConfiguration();
-		configuration.fields(new OpParameter("o3"), new OpParameter("co"), new OpParameter("so2")
-		// new OpParameter("pm10")
+		
+		configuration.fields(
+				new OpParameter("o3"),
+				new OpParameter("co"),
+				new OpParameter("so2")
 		);
-		stream.keyBy("station").countWindow(WINDOW_SIZE).apply(new IncrementalAverage<AirRegister>(configuration))
-				.print();
+		
+		stream
+			.keyBy("station")		
+			.countWindow(WINDOW_SIZE)
+			.apply(new IncrementalAverage<AirRegister>(configuration))
+			.print();
 
 		streamingEnv.execute("AirRegisters");
 	}

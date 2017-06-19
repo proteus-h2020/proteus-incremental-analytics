@@ -10,15 +10,11 @@ import javax.websocket.DeploymentException;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.treelogic.proteus.visualization.server.WebsocketServer;
 
 
 public class WebsocketClient {
 	
-	private static Log logger = LogFactory.getLog(WebsocketClient.class);
 
 	private Session session;
 	/**
@@ -27,7 +23,8 @@ public class WebsocketClient {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	public WebsocketClient(String stringUri) throws DeploymentException, IOException{//ws://localhost:8080/events/
+	public WebsocketClient(String stringUri) throws DeploymentException, IOException{
+		//ws://localhost:8080/events/
 		URI uri = URI.create(stringUri);
 		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 		this.session = container.connectToServer(WebsocketServer.WebsocketEndpoint.class,uri);
@@ -40,8 +37,6 @@ public class WebsocketClient {
 	public void send(String textMessage) throws IOException{
 		if(session != null && session.isOpen()){
 			session.getBasicRemote().sendText("Hello");
-		}else{
-			logger.warn("Attemping to send message when it is not open");
 		}
 	}
 	
@@ -52,8 +47,6 @@ public class WebsocketClient {
 	public void close() throws IOException{
 		if(session != null && session.isOpen()){
 			session.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Nomal close"));
-		}else{
-			logger.warn("Attemping to close connection when it is not open");
 		}
 	}
 }
